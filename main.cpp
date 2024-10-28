@@ -6,20 +6,26 @@ using namespace std;
 void sendHex(vector<string> sc, B15F& drv);
 void sendChecksum(vector<string> hexVec, B15F& drv);
 unsigned char charToHex(char hexChar);
+void send64bit();
+void awaitResponse(B15F& drv);
+int ard_calculateChecksum(int block64bit);
+bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum);
 
 int main() {
+    send64bit();
+}
+
+void send64bit() {
     B15F& drv = B15F::getInstance();
     drv.setRegister(&DDRA, 0xFF); // Bit 0-7 Ausgabe
     drv.setRegister(&PORTA, 0x00);
 
-    std::string sendingText = /*"mein String den du senden sollen tust denn ich bin matthes muhahahaha ja das ist ein"
-                              "Langer Text von mir aber mit absicht denn ich achte nicht darauf was ich schreibe";*/
-    "Abcdef ---- 1000000000000000000";
+    std::string sendingText = "mein String den du senden sollen tust denn ich bin matthes muhahahaha ja das ist ein"
+                              "Langer Text von mir aber mit absicht denn ich achte nicht darauf was ich schreibe";
 
     /* convert char to hex and save a STRING with the hex value */
-    cout << "\n----------------------\nString (char) zu Hex" << endl;
     vector<string> hexVec;
-    for (char st : sendingText) {
+    for (char st : sendingText) { // zeichen für zeichen
         std::stringstream sendingText_characters;
 
         // char zu hex
@@ -27,15 +33,35 @@ int main() {
         string hexStr = sendingText_characters.str();
         hexVec.push_back(hexStr);
 
-        if (hexVec.size() == 16) { // 64-bit (one package - saves as HEX)
-            //sendHex(hexVec, drv);
-            sendChecksum(hexVec, drv);
+        /*
+            !!!!!!
+            wenn vektor nicht bis 64 bit belegt wird (Textdatei hat bspw. nicht mehr so viele Zeichen)
+            wird der Code nicht mehr ausgeführt
+        */
+        if (hexVec.size() == 16) { // 64-bit sind im Vektor gespeichert
+            sendHex(hexVec, drv); // schritt 1
+            sendChecksum(hexVec, drv); // schritt 2
+
+            awaitResponse(drv);
 
             hexVec.clear();
         }
-
-        //sendHex(hexStr, drv);
     }
+}
+
+void awaitResponse(B15F& drv) {
+    bool wertWurdeGelesen = false;
+    //while (!wertWurdeGelesen) {
+    uint8_t value1 = 0x0F;
+    uint8_t val = drv.getRegister(&value1); // rechte(?) Seite der ports mit den gesendeten Werten lesen
+    cout << "Wert: " << val << endl;
+    //if ( /* die 4 Ports einem Muster entsprechen? bzw. einfach den richtigen Wert ergeben */ ) {
+
+    //}
+
+    //if ( /* response ist ein richtiger wert -> block neu senden oder nächsten senden */ ) {
+    //wertWurdeGelesen = true;
+    //}
 }
 
 void sendHex(vector<string> hexVec, B15F& drv) { // only sends if 64 bit were written down
@@ -82,23 +108,46 @@ unsigned char charToHex(char hexChar) {
 }
 
 
-// ---------------------------------------------------------------------------------------------------------
 
-void schrittEins() { // 64-Bit-Block an Dateien senden
 
+
+
+/**** ARDUINO ****/
+
+// liest alles ein, was gesendet wird
+void ard_readBitBlocks() {
+    int gelesener64BitBlock;
+    // 64 Bit einlesen
+    //drv.getRegister(wert);
+
+    // 8 Bit Prüfsumme einlesen
+    int geleseneChecksum;
+
+    // Prüfsumme bilden und danach vergleichen
+    int calculatedChecksum;
+    calculatedChecksum = ard_calculateChecksum(gelesener64BitBlock);
+
+    // Prüfsummen sind gleich (weiteren 64-Bit-Block senden)
+    if (ard_compareChecksum(geleseneChecksum, calculatedChecksum)) {
+
+    } else { // Prüfsummen sind unterschiedlich (nochmals 64-Bit-Block schicken)
+
+    }
 }
 
-void schrittZwei() { // Arduino berechnet Prüfsumme (Code für ArduinoIDE)
+int ard_calculateChecksum(int block64bit) {
+    int checksum;
 
+    /*
+     * Prüfsumme der 64 Bit berechnen
+     */
+
+    std::cout << "Die Prüfsumme ist: " << checksum << endl;
+
+    return 0;
 }
 
-void schrittDrei() { // 8-Bit-Block Prüfsumme an Arduino schicken
-
+bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum) {
+    // empfangene mit der berechneten Prüfsumme vergleichen
+    return geleseneChecksum == calculatedChecksum;
 }
-
-
-
-
-
-
-
