@@ -6,23 +6,21 @@ using namespace std;
 void sendHex(vector<string> sc, B15F& drv);
 void sendChecksum(vector<string> hexVec, B15F& drv);
 unsigned char charToHex(char hexChar);
-void send64bit();
-void awaitResponse(B15F& drv);
+void send64bit(B15F& drv, vector<string>& hexVec);
+bool awaitResponse(B15F& drv);
 int ard_calculateChecksum(int block64bit);
 bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum);
+void setAndSend64bitBlock(B15F& drv, string& textToSend);
 
 int main() {
     B15F& drv = B15F::getInstance();
     drv.setRegister(&DDRA, 0xFF); // Bit 0-7 Ausgabe
     drv.setRegister(&PORTA, 0x00);
 
-    /*string test = "Hallo Welt";
-    for (char t : test) {
-        std::bitset<4> binary(hexTo4BitBinary());
-        std::cout << hex << " in 4-Bit-Binärdarstellung: " << binary << std::endl;
-    }*/
+    // text einlesen
+    string testText = "Hallo ich bin Matthes, sachen machen sachen und so. Bitte funktionier, das wäre super duper tolli frolli";
 
-    setAndSend64bitBlock(drv);
+    setAndSend64bitBlock(drv, testText);
 }
 
 void setAndSend64bitBlock(B15F& drv, std::string& textToSend) {
@@ -36,9 +34,13 @@ void setAndSend64bitBlock(B15F& drv, std::string& textToSend) {
 
         if (hexVec.size() == 16) { // 64-bit sind im Vektor gespeichert (16 Zeichen)
             send64bit(drv, hexVec); // an Arduino schicken; arduino ließt ein
-            sendChecksum(hexVec, drv); // 
+            sendChecksum(hexVec, drv); // an Arduino schicken; arduino ließt ein
 
-            awaitResponse(drv);
+            if (awaitResponse(drv)) { // B15 ließt ports und schaut ob Arduino zufrieden ist
+                // nächstes Paket schicken
+            } else {
+                // Paket nochmal schicken
+            }
 
             hexVec.clear();
         }
@@ -60,7 +62,7 @@ void send64bit(B15F& drv, vector<string>& hexVec) {
     }
 }
 
-void awaitResponse(B15F& drv) {
+bool awaitResponse(B15F& drv) {
     bool wertWurdeGelesen = false;
     //while (!wertWurdeGelesen) {
     uint8_t value1 = 0x0F;
@@ -120,49 +122,4 @@ int hexTo4BitBinary(char hex) {
         std::cerr << "Ungültiges Hexadezimalzeichen: " << hex << std::endl;
         return 0;
     }
-}
-
-
-
-
-
-
-/**** ARDUINO ****/
-
-// liest alles ein, was gesendet wird
-void ard_readBitBlocks() {
-    int gelesener64BitBlock;
-    // 64 Bit einlesen
-    //drv.getRegister(wert);
-
-    // 8 Bit Prüfsumme einlesen
-    int geleseneChecksum;
-
-    // Prüfsumme bilden und danach vergleichen
-    int calculatedChecksum;
-    calculatedChecksum = ard_calculateChecksum(gelesener64BitBlock);
-
-    // Prüfsummen sind gleich (weiteren 64-Bit-Block senden)
-    if (ard_compareChecksum(geleseneChecksum, calculatedChecksum)) {
-
-    } else { // Prüfsummen sind unterschiedlich (nochmals 64-Bit-Block schicken)
-
-    }
-}
-
-int ard_calculateChecksum(int block64bit) {
-    int checksum;
-
-    /*
-     * Prüfsumme der 64 Bit berechnen
-     */
-
-    std::cout << "Die Prüfsumme ist: " << checksum << endl;
-
-    return 0;
-}
-
-bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum) {
-    // empfangene mit der berechneten Prüfsumme vergleichen
-    return geleseneChecksum == calculatedChecksum;
 }
