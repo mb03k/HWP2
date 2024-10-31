@@ -12,39 +12,50 @@ int ard_calculateChecksum(int block64bit);
 bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum);
 
 int main() {
-    send64bit();
-}
-
-void send64bit() {
     B15F& drv = B15F::getInstance();
     drv.setRegister(&DDRA, 0xFF); // Bit 0-7 Ausgabe
     drv.setRegister(&PORTA, 0x00);
 
-    std::string sendingText = "mein String den du senden sollen tust denn ich bin matthes muhahahaha ja das ist ein"
-                              "Langer Text von mir aber mit absicht denn ich achte nicht darauf was ich schreibe";
+    /*string test = "Hallo Welt";
+    for (char t : test) {
+        std::bitset<4> binary(hexTo4BitBinary());
+        std::cout << hex << " in 4-Bit-Binärdarstellung: " << binary << std::endl;
+    }*/
 
-    /* convert char to hex and save a STRING with the hex value */
+    setAndSend64bitBlock(drv);
+}
+
+void setAndSend64bitBlock(B15F& drv, std::string& textToSend) {
+    std::stringstream sendingTextCharacters;
     vector<string> hexVec;
-    for (char st : sendingText) { // zeichen für zeichen
-        std::stringstream sendingText_characters;
-
+    for (char st : textToSend) { // zeichen für zeichen
         // char zu hex
-        sendingText_characters << std::hex << std::uppercase << (int)st;
-        string hexStr = sendingText_characters.str();
+        sendingTextCharacters << std::hex << std::uppercase << (int)st;
+        string hexStr = sendingTextCharacters.str();
         hexVec.push_back(hexStr);
 
-        /*
-            !!!!!!
-            wenn vektor nicht bis 64 bit belegt wird (Textdatei hat bspw. nicht mehr so viele Zeichen)
-            wird der Code nicht mehr ausgeführt
-        */
-        if (hexVec.size() == 16) { // 64-bit sind im Vektor gespeichert
-            sendHex(hexVec, drv); // schritt 1
-            sendChecksum(hexVec, drv); // schritt 2
+        if (hexVec.size() == 16) { // 64-bit sind im Vektor gespeichert (16 Zeichen)
+            send64bit(drv, hexVec); // an Arduino schicken; arduino ließt ein
+            sendChecksum(hexVec, drv); // 
 
             awaitResponse(drv);
 
             hexVec.clear();
+        }
+    }
+    sendingTextCharacters.str(std::string()); // stringstream leeren
+}
+
+void send64bit(B15F& drv, vector<string>& hexVec) {
+    for (string hexV : hexVec) { // e.g. "1A"
+        for (char hexAsChar : hexV) { // e.g. "1" and "A"
+            // hier prüfen ob das selbe hintereinander gesendet wird
+            // falls ja: den Wert invertieren
+
+            drv.setRegister(&PORTA, 0x00); // LEDs to null
+
+            cout << "hex: "<<hexAsChar<<endl;
+            drv.setRegister(&PORTA, hexAsChar &0x0F); // right LEDs (for hex)
         }
     }
 }
@@ -60,19 +71,8 @@ void awaitResponse(B15F& drv) {
     //}
 
     //if ( /* response ist ein richtiger wert -> block neu senden oder nächsten senden */ ) {
-    //wertWurdeGelesen = true;
+        //wertWurdeGelesen = true;
     //}
-}
-
-void sendHex(vector<string> hexVec, B15F& drv) { // only sends if 64 bit were written down
-    for (string hexV : hexVec) { // e.g. {"1A", "FD", "4B"}
-        for (char hexAsChar : hexV) { // e.g. "1A"
-            drv.setRegister(&PORTA, 0x00); // LEDs to null
-            drv.delay_ms(100);
-            drv.setRegister(&PORTA, hexAsChar &0x0f); // right LEDs (for hex)
-            drv.delay_ms(200);
-        }
-    }
 }
 
 void sendChecksum(vector<string> hexVec, B15F& drv) {
@@ -105,6 +105,21 @@ unsigned char charToHex(char hexChar) {
         return hexChar - 'a' + 10;  // 'a' ist auch 10 in Hex
     }
     return 0;
+}
+
+int hexTo4BitBinary(char hex) {
+    // Konvertiere Hexadezimalzeichen in eine Ganzzahl
+    int value;
+    if (hex >= '0' && hex <= '9') {
+        return value = hex - '0';
+    } else if (hex >= 'A' && hex <= 'F') {
+        return value = hex - 'A' + 10;
+    } else if (hex >= 'a' && hex <= 'f') {
+        return value = hex - 'a' + 10;
+    } else {
+        std::cerr << "Ungültiges Hexadezimalzeichen: " << hex << std::endl;
+        return 0;
+    }
 }
 
 
