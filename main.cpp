@@ -7,10 +7,11 @@ void sendHex(vector<string> sc, B15F& drv);
 void sendChecksum(vector<string> hexVec, B15F& drv);
 unsigned char charToHex(char hexChar);
 void send64bit(B15F& drv, string& hexStr);
-bool awaitResponse(B15F& drv);
 int ard_calculateChecksum(int block64bit);
 bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum);
 void setAndSend64bitBlock(B15F& drv, string& textToSend);
+
+bool arduinoSaysNextBlock(B15F& drv, int checksum);
 
 string get64bit(int start, string& text);
 string escapeInHex = "1B";
@@ -33,25 +34,53 @@ int main() {
     // text einlesen
     string testText = "3333333333ICH HABE ES EINFACH AHAHAHHHA MNAOIFNUDESBVK!!!!!";
 
-    string text16chars;
-    text16chars = get64bit(0, testText);
+    bool sendPakets = true;
+    int start = 0;
 
-    send64bit(drv, text16chars);
+    /*
+     * Logik hinter allem
+     * solange man neue Zeichen einlesen kann, werden:
+     *  1) 16 oder weniger Zeichen (in hex) eingelesen
+     *  2) die Zeichen gesendet
+     *  3) gewartet, ob der Arduino das Paket richtig empfangen hat
+     *  4) Start bei 1)
+     * */
+    while (sendPakets) { // !!!!Fehler!!!! bisher ist die Bedingung komplett falsch
+        string text16chars;
+        text16chars = get64bit(start, testText);
+        send64bit(drv, text16chars);
 
-
-    //setAndSend64bitBlock(drv, testText);
+        if (arduinoSaysNextBlock(drv, 100)) {
+            start += 16;
+        } else {
+            sendPakets = false;
+        }
+    }
 
     drv.setRegister(&PORTA, 0x00);
 }
 
 string get64bit(int start, string& text) {
     stringstream ss;
-    int end = start + 16;
+    int readableTextLength = (text.length() - start);
+    cout << "txt.l() "<<text.length()<<" - start "<<start<<endl;
+    // if falls man am ende des Strings angekommen ist und keine 16 Zeichen mehr gelesen werden können
+    if (readableTextLength < 16) {
+        cerr << "kleiner als 16" << endl;
+        int end = (start + text.length());
+        for (int i=start; i<end; i++) {
+            cout << "i: " << i << endl;
+            char ch = text[i];
+            ss << hex << uppercase << static_cast<int>(ch);
+        }
+    } else { // man kann 16 Zeichen einlesen
+        int end = start + 16;
 
-    for (int i=start; i<end; i++) {
-        cout << "i: "<<i<<endl;
-        char ch = text[i];
-        ss << hex << uppercase << static_cast<int>(ch);
+        for (int i = start; i < end; i++) {
+            cout << "i: " << i << endl;
+            char ch = text[i];
+            ss << hex << uppercase << static_cast<int>(ch);
+        }
     }
 
     cout << ss.str() << endl;
@@ -72,7 +101,9 @@ void send64bit(B15F& drv, string& hexStr) {
          */
         if (oldCh == ch) { // zwei identische zeichen werden nacheinander gesendet
             cout << "ESC - ";
-            drv.setRegister(&PORTA, escapeInHex &0x0F);
+            drv.setRegister(&PORTA, escapeInHex[0] &0x0F);
+            drv.delay_ms(50);
+            drv.setRegister(&PORTA, escapeInHex[1] &0x0F);
             drv.delay_ms(50);
 
             cout << "Counter: "<< counter << " - hex: "<< bitset<4>(ch) <<endl;
@@ -89,19 +120,26 @@ void send64bit(B15F& drv, string& hexStr) {
     }
 }
 
-bool awaitResponse(B15F& drv) {
-    bool wertWurdeGelesen = false;
-    //while (!wertWurdeGelesen) {
-    uint8_t value1 = 0x0F;
-    uint8_t val = drv.getRegister(&value1); // rechte(?) Seite der ports mit den gesendeten Werten lesen
-    cout << "Wert: " << val << endl;
-    //if ( /* die 4 Ports einem Muster entsprechen? bzw. einfach den richtigen Wert ergeben */ ) {
+// prüfen ob das Paket richtig empfangen wurde (per Prüfsumme)
+bool arduinoSaysNextBlock(B15F& drv, int calculatedChecksum) {
+    uint8_t b0 = 0x00;
+    uint8_t b1 = 0x01;
+    uint8_t b2 = 0x02;
+    uint8_t b3 = 0x03;
 
-    //}
+    uint8_t* a0 = &b0;
+    uint8_t* a1 = &b1;
+    uint8_t* a2 = &b2;
+    uint8_t* a3 = &b3;
 
-    //if ( /* response ist ein richtiger wert -> block neu senden oder nächsten senden */ ) {
-    //wertWurdeGelesen = true;
-    //}
+    uint8_t r0 = drv.getRegister(a0);
+    uint8_t r1 = drv.getRegister(a1);
+    uint8_t r2 = drv.getRegister(a2);
+    uint8_t r3 = drv.getRegister(a3);
+
+    int recievedChecksum = (r3 << 3) | (r2 << 2) | (r1 << 1) | r0; // bits zu int
+
+    return (calculatedChecksum == recievedChecksum);
 }
 
 void sendChecksum(vector<string> hexVec, B15F& drv) {
