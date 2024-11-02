@@ -6,59 +6,110 @@ using namespace std;
 void sendHex(vector<string> sc, B15F& drv);
 void sendChecksum(vector<string> hexVec, B15F& drv);
 unsigned char charToHex(char hexChar);
-void send64bit(B15F& drv, vector<string>& hexVec);
+void send64bit(B15F& drv, string& hexStr);
 bool awaitResponse(B15F& drv);
 int ard_calculateChecksum(int block64bit);
 bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum);
 void setAndSend64bitBlock(B15F& drv, string& textToSend);
 
+string get64bit(int start, string& text);
+
 int main() {
     B15F& drv = B15F::getInstance();
     drv.setRegister(&DDRA, 0xFF); // Bit 0-7 Ausgabe
     drv.setRegister(&PORTA, 0x00);
+    
+        drv.setRegister(&PORTA, 0xFF);
+        drv.delay_ms(1000);
+        drv.setRegister(&PORTA, 0x00);
+        drv.delay_ms(500);
+	drv.setRegister(&PORTA, 0xFF);
+        drv.delay_ms(1000);
+	drv.setRegister(&PORTA, 0x00);
+        drv.delay_ms(500);
 
     // text einlesen
-    string testText = "Hallo ich bin Matthes, sachen machen sachen und so. Bitte funktionier, das wäre super duper tolli frolli";
+    string testText = "3333333333ICH HABE ES EINFACH AHAHAHHHA MNAOIFNUDESBVK!!!!!";
 
-    setAndSend64bitBlock(drv, testText);
+    string text16chars = get64bit(0, testText);	
+    send64bit(drv, text16chars);
+    //setAndSend64bitBlock(drv, testText);
+    
+    drv.setRegister(&PORTA, 0x00);
 }
 
 void setAndSend64bitBlock(B15F& drv, std::string& textToSend) {
     std::stringstream sendingTextCharacters;
-    vector<string> hexVec;
+    int counter = 1;
     for (char st : textToSend) { // zeichen für zeichen
+	counter++;
         // char zu hex
-        sendingTextCharacters << std::hex << std::uppercase << (int)st;
-        string hexStr = sendingTextCharacters.str();
-        hexVec.push_back(hexStr);
+        std::cout << "aktuelles Zeichen: " << "'" << st << "'" << endl;
+        
+        sendingTextCharacters << std::hex << std::uppercase << static_cast<int>(st) << ' ';
+        string hexStr = "";
+        hexStr = sendingTextCharacters.str();
+        
+        std::cout << "zeichen in Hex: " << "'" << hexStr << "'" << endl;
+        std::cout << "--------------------------------------------------" << std::endl;
+        
 
-        if (hexVec.size() == 16) { // 64-bit sind im Vektor gespeichert (16 Zeichen)
-            send64bit(drv, hexVec); // an Arduino schicken; arduino ließt ein
-            sendChecksum(hexVec, drv); // an Arduino schicken; arduino ließt ein
+        if (counter == 16) { // 64-bit sind im Vektor gespeichert (16 Zeichen)
+            send64bit(drv, hexStr); // an Arduino schicken; arduino ließt ein
+            /*sendChecksum(hexVec, drv); // an Arduino schicken; arduino ließt ein
 
             if (awaitResponse(drv)) { // B15 ließt ports und schaut ob Arduino zufrieden ist
                 // nächstes Paket schicken
             } else {
                 // Paket nochmal schicken
-            }
+            }*/
 
-            hexVec.clear();
+	    counter = 1;
         }
     }
     sendingTextCharacters.str(std::string()); // stringstream leeren
 }
 
-void send64bit(B15F& drv, vector<string>& hexVec) {
-    for (string hexV : hexVec) { // e.g. "1A"
+string get64bit(int start, string& text) {
+    stringstream ss;
+    int end = start + 16;
+    
+    for (int i=start; i<end; i++) {
+    	cout << "i: "<<i<<endl;
+    	char ch = text[i];
+    	ss << hex << uppercase << static_cast<int>(ch);
+    }
+    
+    cout << ss.str() << endl;
+    return ss.str();
+}
+
+void send64bit(B15F& drv, string& hexStr) {
+    /*for (string hexV : hexVec) { // e.g. "1A"
+	std::cout << "ich wurde aufgerufen"<<endl;
         for (char hexAsChar : hexV) { // e.g. "1" and "A"
             // hier prüfen ob das selbe hintereinander gesendet wird
             // falls ja: den Wert invertieren
 
             drv.setRegister(&PORTA, 0x00); // LEDs to null
+            drv.delay_ms(10);
 
             cout << "hex: "<<hexAsChar<<endl;
             drv.setRegister(&PORTA, hexAsChar &0x0F); // right LEDs (for hex)
+            drv.delay_ms(20);
         }
+    }*/
+    
+    int c = 1;
+    // neuerer Ansatz
+    for (char ch : hexStr) {
+    	/*drv.setRegister(&PORTA, 0x00); // LEDs to null
+	drv.delay_ms(20);*/
+
+	cout << "Counter: "<< c << " - hex: "<< bitset<4>(ch) <<endl;
+	drv.setRegister(&PORTA, ch &0x0F); // right LEDs (for hex)
+	drv.delay_ms(50);
+	c++;
     }
 }
 
