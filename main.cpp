@@ -61,17 +61,23 @@ int main() {
 }
 
 string get64bit(int start, string& text) {
+    if (start > text.length()) {
+        return nullptr;
+    }
+
     stringstream ss;
     int readableTextLength = (text.length() - start);
     cout << "txt.l() "<<text.length()<<" - start "<<start<<endl;
+
     // if falls man am ende des Strings angekommen ist und keine 16 Zeichen mehr gelesen werden können
     if (readableTextLength < 16) {
         cerr << "kleiner als 16" << endl;
-        int end = (start + text.length());
+        int end = (start + readableTextLength);
         for (int i=start; i<end; i++) {
             cout << "i: " << i << endl;
             char ch = text[i];
-            ss << hex << uppercase << static_cast<int>(ch);
+            //ss << hex << uppercase << static_cast<int>(ch);
+            ss << ch; // zum Testen ob alles in richtigen Blöcken ausgegeben wird
         }
     } else { // man kann 16 Zeichen einlesen
         int end = start + 16;
@@ -79,7 +85,8 @@ string get64bit(int start, string& text) {
         for (int i = start; i < end; i++) {
             cout << "i: " << i << endl;
             char ch = text[i];
-            ss << hex << uppercase << static_cast<int>(ch);
+            //ss << hex << uppercase << static_cast<int>(ch);
+            ss << ch;
         }
     }
 
