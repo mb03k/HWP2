@@ -31,6 +31,13 @@ int main() {
     drv.setRegister(&PORTA, 0x00);
     drv.delay_ms(500);
 
+    /*
+     * Prüfsumme berechnen - zwei Ansätze:
+     * 1.) zyklische Redundanzprüfung
+     * 2.) Bits zählen - nur die, die eins sind
+     *
+     */
+
     // text einlesen
     string testText = "3333333333ICH HABE ES EINFACH AHAHAHHHA MNAOIFNUDESBVK!!!!!";
 
@@ -45,15 +52,20 @@ int main() {
      *  3) gewartet, ob der Arduino das Paket richtig empfangen hat
      *  4) Start bei 1)
      * */
-    while (sendPakets) { // !!!!Fehler!!!! bisher ist die Bedingung komplett falsch
+    while (sendPakets) {
         string text16chars;
         text16chars = get64bit(start, testText);
         send64bit(drv, text16chars);
 
+        // if-Bedingung ist irrelevant -> bricht bei Rückgabe des Nullpointers von selbst ab
+        if (text16chars.empty()) {
+            cerr << "abrruch"<<endl;
+            sendPakets = false;
+        }
+
+        // nur wenn Prüfsumme korrekt ist wird der nächste Block eingelesen
         if (arduinoSaysNextBlock(drv, 100)) {
             start += 16;
-        } else {
-            sendPakets = false;
         }
     }
 
@@ -69,17 +81,8 @@ string get64bit(int start, string& text) {
     int readableTextLength = (text.length() - start);
     cout << "txt.l() "<<text.length()<<" - start "<<start<<endl;
 
-    // if falls man am ende des Strings angekommen ist und keine 16 Zeichen mehr gelesen werden können
-    if (readableTextLength < 16) {
-        cerr << "kleiner als 16" << endl;
-        int end = (start + readableTextLength);
-        for (int i=start; i<end; i++) {
-            cout << "i: " << i << endl;
-            char ch = text[i];
-            //ss << hex << uppercase << static_cast<int>(ch);
-            ss << ch; // zum Testen ob alles in richtigen Blöcken ausgegeben wird
-        }
-    } else { // man kann 16 Zeichen einlesen
+    // man kann 16 Zeichen einlesen
+    if (readableTextLength > 15) {
         int end = start + 16;
 
         for (int i = start; i < end; i++) {
@@ -87,6 +90,15 @@ string get64bit(int start, string& text) {
             char ch = text[i];
             //ss << hex << uppercase << static_cast<int>(ch);
             ss << ch;
+        }
+    } else { // else falls man am ende des Strings angekommen ist und keine 16 Zeichen mehr gelesen werden können
+        cerr << "kleiner als 16" << endl;
+        int end = (start + readableTextLength);
+        for (int i=start; i<end; i++) {
+            cout << "i: " << i << endl;
+            char ch = text[i];
+            //ss << hex << uppercase << static_cast<int>(ch);
+            ss << ch; // zum Testen ob alles in richtigen Blöcken ausgegeben wird
         }
     }
 
@@ -99,14 +111,19 @@ void send64bit(B15F& drv, string& hexStr) {
     char oldCh;
 
     for (char ch : hexStr) {
-        //drv.setRegister(&PORTA, 0x00); // LEDs to null
+        //drv.setRegister(&PORTA, 0x00);
         //drv.delay_ms(20);
 
         /*
          * Idee:
          * wenn zwei zeichen hintereinander gleich sind und gesendet werden, erst ein escape zeichen schicken
          */
-        if (oldCh == ch) { // zwei identische zeichen werden nacheinander gesendet
+        if (oldCh != ch) { // zwei unterschiedliche zeichen werden nacheinander gesendet
+            oldCh = ch;
+            cout << "Counter: "<< counter << " - hex: "<< bitset<4>(ch) <<endl;
+            drv.setRegister(&PORTA, ch &0x0F);
+            drv.delay_ms(50);
+        } else { // zwei gleiche Zeichen werden nacheinander gesendet
             cout << "ESC - ";
             drv.setRegister(&PORTA, escapeInHex[0] &0x0F);
             drv.delay_ms(50);
@@ -116,20 +133,14 @@ void send64bit(B15F& drv, string& hexStr) {
             cout << "Counter: "<< counter << " - hex: "<< bitset<4>(ch) <<endl;
             drv.setRegister(&PORTA, ch &0x0F);
             drv.delay_ms(50);
-        } else { // der Regelfall (einfach das Zeichen senden)
-            oldCh = ch;
-            cout << "Counter: "<< counter << " - hex: "<< bitset<4>(ch) <<endl;
-            drv.setRegister(&PORTA, ch &0x0F);
-            drv.delay_ms(50);
         }
-
         counter++;
     }
 }
 
 // prüfen ob das Paket richtig empfangen wurde (per Prüfsumme)
 bool arduinoSaysNextBlock(B15F& drv, int calculatedChecksum) {
-    uint8_t b0 = 0x00;
+    /*uint8_t b0 = 0x00;
     uint8_t b1 = 0x01;
     uint8_t b2 = 0x02;
     uint8_t b3 = 0x03;
@@ -137,19 +148,28 @@ bool arduinoSaysNextBlock(B15F& drv, int calculatedChecksum) {
     uint8_t* a0 = &b0;
     uint8_t* a1 = &b1;
     uint8_t* a2 = &b2;
-    uint8_t* a3 = &b3;
+    uint8_t* a3 = &b3;*/
 
-    uint8_t r0 = drv.getRegister(a0);
+    // &PINA verweist auf den Wert im Speicher, der verändert wird
+    // &0x0F beachtet nur die letzten 4 Pins davon
+    // -> nennt man bitweise maskierung / bitmaskierung
+
+    /*uint8_t rp0 = r0 & 0x01;
+    uint8_t rp1 = r0 & 0x02;
+    uint8_t rp2 = r0 & 0x04;
+    uint8_t rp3 = r0 & 0x08;
     uint8_t r1 = drv.getRegister(a1);
     uint8_t r2 = drv.getRegister(a2);
-    uint8_t r3 = drv.getRegister(a3);
+    uint8_t r3 = drv.getRegister(a3);*/
 
-    int recievedChecksum = (r3 << 3) | (r2 << 2) | (r1 << 1) | r0; // bits zu int
+    uint8_t recievedChecksum = drv.getRegister(&PINA & 0x0F);
 
     return (calculatedChecksum == recievedChecksum);
 }
 
-void sendChecksum(vector<string> hexVec, B15F& drv) {
+/*
+ * ////Alter Ansatz////
+ * void sendChecksum(vector<string> hexVec, B15F& drv) {
     unsigned int quersumme = 0;
 
     for (string hexV : hexVec) {
@@ -168,7 +188,7 @@ void sendChecksum(vector<string> hexVec, B15F& drv) {
         }
     }
     cout << "ergebnis: "<<quersumme<<endl;
-}
+}*/
 
 unsigned char charToHex(char hexChar) {
     if (hexChar >= '0' && hexChar <= '9') {
