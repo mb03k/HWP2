@@ -29,4 +29,35 @@ void loop() {
      * - Prüfsumme berechnen
      * - Prüfsummen vergleichen (eingelesene und berechnete)
      * */
+
+    string testText = "eins 1111B11  Bbb";
+    bool einsDavor = false;
+
+    for (char ch : testText) {
+        char neuerWert = 'a';
+        switch (ch) {
+            case '1':
+                if (einsDavor) {
+                    cout << "1";
+                } else {
+                }
+                einsDavor = true;
+                break;
+            case 'B':
+                if (!einsDavor) {
+                    //writeValuesToOtherB15('B');
+                    cout << "B";
+                }
+                einsDavor = false;
+                break;
+            default:
+                if (einsDavor) {
+                    //writeValuesToOtherB15('1');
+                    cout << "1";
+                }
+                //writeValuesToOtherB15(ch);
+                cout << ch;
+                einsDavor = false;
+        }
+    }
 }
