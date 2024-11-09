@@ -10,6 +10,7 @@ void send64bit(B15F& drv, string& hexStr);
 int ard_calculateChecksum(int block64bit);
 bool ard_compareChecksum(int geleseneChecksum, int calculatedChecksum);
 void setAndSend64bitBlock(B15F& drv, string& textToSend);
+int countBits(unsigned int hexValue);
 
 bool arduinoSaysNextBlock(B15F& drv, int checksum);
 
@@ -19,23 +20,26 @@ string escapeInHex = "1B";
 
 int main() {
     B15F& drv = B15F::getInstance();
-    drv.setRegister(&DDRA, 0xFF); // Bit 0-7 Ausgabe
-    drv.setRegister(&PORTA, 0x00);
+    drv.setRegister(&DDRA, 0x0F); // Bit 0-7 Ausgabe // !!!! WICHTIG
+    /*!!!WICHTIG!!!
+     * setRegister(&DDRA, value) -> der Value ist bei 0x00 zum lesen gesetzt. Jetzt kann man auch getRegister benutzen
+     *                           -> wenn Value auf 0xFF ist, kann man auf die Pins schreiben
+     * */
+    /*drv.setRegister(&PORTA, 0x00);
 
     drv.setRegister(&PORTA, 0xFF);
     drv.delay_ms(1000);
     drv.setRegister(&PORTA, 0x00);
     drv.delay_ms(500);
-    drv.setRegister(&PORTA, 0xFF);
+	drv.setRegister(&PORTA, 0xFF);
     drv.delay_ms(1000);
-    drv.setRegister(&PORTA, 0x00);
-    drv.delay_ms(500);
+	drv.setRegister(&PORTA, 0x00);
+    drv.delay_ms(500);*/
 
     /*
      * Prüfsumme berechnen - zwei Ansätze:
      * 1.) zyklische Redundanzprüfung
      * 2.) Bits zählen - nur die, die eins sind
-     *
      */
 
     // text einlesen
@@ -52,10 +56,11 @@ int main() {
      *  3) gewartet, ob der Arduino das Paket richtig empfangen hat
      *  4) Start bei 1)
      * */
-    while (sendPakets) {
+    /*while (sendPakets) {
         string text16chars;
         text16chars = get64bit(start, testText);
         send64bit(drv, text16chars);
+        //sendChecksum();
 
         // if-Bedingung ist irrelevant -> bricht bei Rückgabe des Nullpointers von selbst ab
         if (text16chars.empty()) {
@@ -67,7 +72,9 @@ int main() {
         if (arduinoSaysNextBlock(drv, 100)) {
             start += 16;
         }
-    }
+    }*/
+
+    arduinoSaysNextBlock(drv, 100);
 
     drv.setRegister(&PORTA, 0x00);
 }
@@ -140,32 +147,25 @@ void send64bit(B15F& drv, string& hexStr) {
 
 // prüfen ob das Paket richtig empfangen wurde (per Prüfsumme)
 bool arduinoSaysNextBlock(B15F& drv, int calculatedChecksum) {
-    /*uint8_t b0 = 0x00;
-    uint8_t b1 = 0x01;
-    uint8_t b2 = 0x02;
-    uint8_t b3 = 0x03;
-
-    uint8_t* a0 = &b0;
-    uint8_t* a1 = &b1;
-    uint8_t* a2 = &b2;
-    uint8_t* a3 = &b3;*/
-
-    // &PINA verweist auf den Wert im Speicher, der verändert wird
-    // &0x0F beachtet nur die letzten 4 Pins davon
-    // -> nennt man bitweise maskierung / bitmaskierung
-
-    /*uint8_t rp0 = r0 & 0x01;
-    uint8_t rp1 = r0 & 0x02;
-    uint8_t rp2 = r0 & 0x04;
-    uint8_t rp3 = r0 & 0x08;
-    uint8_t r1 = drv.getRegister(a1);
-    uint8_t r2 = drv.getRegister(a2);
-    uint8_t r3 = drv.getRegister(a3);*/
-
-    uint8_t recievedChecksum = drv.getRegister(&PINA & 0x0F);
+    uint8_t recievedChecksum = drv.getRegister(&PINA);
+    cout << "Wert: " << bitset<8>(recievedChecksum) << endl;
 
     return (calculatedChecksum == recievedChecksum);
 }
+
+void sendChecksum() {
+
+}
+
+int countBits(unsigned int hexValue) {
+    int count = 0;
+    while (hexValue) {
+        count += hexValue & 1; // Prüfen, ob das niedrigste Bit 1 ist
+        hexValue >>= 1;        // Eine Position nach rechts verschieben
+    }
+    return count;
+}
+
 
 /*
  * ////Alter Ansatz////
