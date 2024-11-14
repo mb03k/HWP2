@@ -1,4 +1,9 @@
-void setup() {
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+/*void setup() {
     pinMode(2, INPUT);
     pinMode(3, INPUT);
     pinMode(4, INPUT);
@@ -9,30 +14,13 @@ void setup() {
     pinMode(9, INPUT);
     pinMode(10, INPUT);
     Serial.begin(9600);
-}
+}*/
 
 int alterWert = -1;
 int neuerWert;
 int counter = 1;
 
 void loop() {
-    if (digitalRead(2) == HIGH
-        && digitalRead(3) == HIGH
-        && digitalRead(4) == HIGH
-        && digitalRead(5) == HIGH)
-    {
-        Serial.println("")
-    }
-
-    /*
-     * Was muss das Arduino können?
-     *
-     * - 64 bit-block einlesen
-     * - 8 bit Prüfsumme einlesen
-     * - Prüfsumme berechnen
-     * - Prüfsummen vergleichen (eingelesene und berechnete)
-     * */
-
     string testText = "eins 1111B11  Bbb";
     bool einsDavor = false;
 
