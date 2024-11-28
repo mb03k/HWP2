@@ -6,9 +6,11 @@
 #include "saveInVector.h"
 #include <vector>
 
-void convertStringToHex(std::string& input) {
+void convertStringToHex(std::string & input) {
     std::vector<std::vector<unsigned char>> result;
     std::vector<unsigned char> currentBlock;
+
+    std::cout << "INSTRINGTOHEX"<<std::endl;
 
     for (size_t i = 0; i < input.size(); ++i) {
         // Füge das aktuelle Zeichen als Byte hinzu

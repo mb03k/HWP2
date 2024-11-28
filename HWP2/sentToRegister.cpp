@@ -1,7 +1,10 @@
 #include <iostream>
 #include <bitset>
+#include <b15f/b15f.h>
 
-void writeMSBtoRegister(char ch, int msb) {
+void delay100(B15F& drv);
+
+void writeMSBtoRegister(B15F& drv, char ch, int msb) {
     std::cout
         << "\t\tsend '"
         << ch
@@ -10,7 +13,7 @@ void writeMSBtoRegister(char ch, int msb) {
     << std::endl;
 }
 
-void writeLSBtoRegister(char ch, int lsb) {
+void writeLSBtoRegister(B15F& drv, char ch, int lsb) {
     std::cout
         << "\t\tsend '"
         << ch
@@ -19,25 +22,25 @@ void writeLSBtoRegister(char ch, int lsb) {
     << std::endl;
 }
 
-void sendLowCLK() {
-    //drv.setRegister(&PORTA, 0x00);
-    //delay100();
+void sendLowCLK(B15F& drv) {
+    drv.setRegister(&PORTA, 0x00);
+    delay100(drv);
 
     std::cout << "\t\t0000 - CLK" << std::endl;
 }
 
-void sendBlockStartSequence() {
+void sendBlockStartSequence(B15F& drv) {
     std::cout << "ANFANG BLOCK: 0001" << std::endl;
-    //drv.setRegister(&PORTA, 1);
-    //delay100();
+    drv.setRegister(&PORTA, 1);
+    delay100(drv);
 }
 
-void sendBlockEndSequence() {
+void sendBlockEndSequence(B15F& drv) {
     std::cout << "ENDE BLOCK: 0010" << std::endl;
-    //drv.setRegister(&PORTA, 2);
-    //delay100();
+    drv.setRegister(&PORTA, 2);
+    delay100(drv);
 }
 
-void delay100() {
-    //drv.delay_ms(100);
+void delay100(B15F& drv) {
+    drv.delay_ms(100);
 }

@@ -1,18 +1,29 @@
 #include <iostream>
 #include <fstream>
+#include <bitset>
+#include <b15f/b15f.h>
 
 #include "saveInVector.h"
-#include "sentToRegister.h"
+//#include "sentToRegister.h"
 #include "linuxpipeCheck.h"
 #include "stringToHex.h"
 
+
+
+void convertStringToHex(std::string& input);
+void writeMSBtoRegister(char ch, int msb);
+void writeLSBtoRegister(char ch, int lsb);
+void sendLowCLK();
+void sendBlockStartSequence();
+void sendBlockEndSequence();
+void delay100();
 
 void startSending();
 void sendInnerChunk(std::string& chunk);
 int calculateMSB(int val);
 int calculateLSB(int val);
 int calculateHexCharToInt(const char& hexChar);
-
+B15F& drv = B15F::getInstance();
 int offset;
 
 int calculateHexCharToInt(const char& hexChar) {
@@ -29,6 +40,13 @@ int calculateHexCharToInt(const char& hexChar) {
 }
 
 int main() {
+    drv.setRegister(&DDRA, 0xFF); // Bit 0-7 Ausgabe // !!!! WICHTIG
+    /*!!!WICHTIG!!!
+     * setRegister(&DDRA, value) -> der Value ist bei 0x00 zum lesen gesetzt. Jetzt kann man auch getRegister benutzen
+     *                           -> wenn Value auf 0xFF ist, kann man auf die Pins schreiben
+     * */
+
+
     // speichert die eingangsdatei in einen Vektor
 
     std::string input;
@@ -46,6 +64,7 @@ int main() {
         // String in HEX umwandeln
         std::cout << "String in HEX umwandeln" << std::endl;
         convertStringToHex(input);
+        saveInVector(input);
     }
 
     startSending();
@@ -54,12 +73,12 @@ int main() {
 }
 
 void startSending() {
-    //offset = getVecSize();
+    offset = getVecSize();
 
-    //for (int i=0; i<offset; i++) {
-        //std::string chunk = getChunkAsHexString(i);
-        //sendInnerChunk(chunk);
-    //}
+    for (int i=0; i<offset; i++) {
+        std::string chunk = getChunkAsHexString(i);
+        sendInnerChunk(chunk);
+    }
 
     std::cout
         << "-----------------------------------------"
@@ -78,7 +97,7 @@ void sendInnerChunk(std::string& chunk) {
         << chunk
     << std::endl;
 
-    //sendBlockStartSequence();
+    sendBlockStartSequence();
 
     /*
      * Hauptfunktion:
@@ -90,14 +109,14 @@ void sendInnerChunk(std::string& chunk) {
         int msb = calculateMSB(innerChunkInt);
         int lsb = calculateLSB(innerChunkInt);
 
-        /*writeMSBtoRegister(ch, msb);
+        writeMSBtoRegister(ch, msb);
         sendLowCLK();
-        writeLSBtoRegister(ch, lsb);*/
-       // sendLowCLK();
+        writeLSBtoRegister(ch, lsb);
+        sendLowCLK();
 
         std::cout << " ------ " << std::endl;
     }
-    //sendBlockEndSequence();
+    sendBlockEndSequence();
     std::cout << std::endl;
 }
 
@@ -112,3 +131,71 @@ int calculateLSB(int val) {
     lsb += 8; // für 10XX
     return lsb;
 }
+
+
+
+
+
+
+
+
+
+// ------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+void writeMSBtoRegister(char ch, int msb) {
+    std::cout
+        << "\t\tsend '"
+        << ch
+        << "'  MSB: "
+        << std::bitset<4>(msb)
+    << std::endl;
+    drv.setRegister(&PORTA, msb);
+    delay100();
+}
+
+void writeLSBtoRegister(char ch, int lsb) {
+    std::cout
+        << "\t\tsend '"
+        << ch
+        << "'  LSB: "
+        << std::bitset<4>(lsb)
+    << std::endl;
+    drv.setRegister(&PORTA, lsb);
+    delay100();
+}
+
+void sendLowCLK() {
+    drv.setRegister(&PORTA, 0x00);
+    delay100();
+
+    std::cout << "\t\t0000 - CLK" << std::endl;
+}
+
+void sendBlockStartSequence() {
+    std::cout << "ANFANG BLOCK: 0001" << std::endl;
+    drv.setRegister(&PORTA, 1);
+    delay100();
+}
+
+void sendBlockEndSequence() {
+    std::cout << "ENDE BLOCK: 0010" << std::endl;
+    drv.setRegister(&PORTA, 2);
+    delay100();
+}
+
+void delay100() {
+    drv.delay_ms(100);
+}
+
+
+
