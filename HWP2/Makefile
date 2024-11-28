@@ -2,15 +2,14 @@
 # Project: B15F (board15 Famulus Edition)
 # Author: Tristan Krause
 # Creation Date: 2019-05-15
-# testKommentar
 
 # Environment
-COMPILER_PATH = g++
+COMPILER_PATH = g++-12
 
 # Options
 CFLAGS   = -std=c++17 -O3 -Wall -Wextra
-LDFLAGS  = -lb15fdrv
-OBJECTS  = main.o
+
+OBJECTS  = main.o sentToRegister.o saveInVector.o linuxpipeCheck.o stringToHex.o
 OUT      = main.elf
 
 COMPILE = $(COMPILER_PATH) $(CFLAGS)
