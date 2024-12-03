@@ -1,7 +1,6 @@
 
 void start();
 void sendInt(int val);
-void weitersenden();
 
 void setup() {
   DDRD &= 0b11110000;
@@ -28,7 +27,6 @@ void loop() {
   neuerWert = PIND; // & 0b1111000;
   neuerWert >>= 2;
   neuerWert &= 0b1111;
-  
 
   // wenn CLK auf eins ist einlesen -> funktioniert auch
   //if (neuerWert >= 8) {
@@ -43,7 +41,7 @@ void loop() {
      * -> auch für DDRB, welche zwei aus DDRD und DDRB benutzt
      */
       // Liest beide Register ein
-      uint8_t DDRD_READIN = 0b00111100;
+      /*uint8_t DDRD_READIN = 0b00111100;
       uint8_t DDRB_READIN = 0b00000011;
 
       // maskiert die relevanten Bits - die man auch braucht
@@ -68,15 +66,12 @@ void loop() {
       uint8_t DDRD_impPins = DDRD & 0b11;
       uint8_t DDRB_impPins = DDRB & 0b11;
       std::cout << "impPins DDRD: " << std::bitset<2>(DDRD_impPins) << std::endl;
-      std::cout << "impPins DDRB: " << std::bitset<2>(DDRB_impPins) << std::endl;
+      std::cout << "impPins DDRB: " << std::bitset<2>(DDRB_impPins) << std::endl;*/
 
 
       start();
   }
 }
-
-
-
 
 
 void start() {
@@ -93,7 +88,6 @@ void start() {
       Serial.println(neuerWert, BIN);
       Serial.print("Counter: ");
       Serial.println(counter);
-weitersenden();
       Serial.println();
       
       Serial.println("--------------");
@@ -145,21 +139,4 @@ weitersenden();
       pruefsummeLesen = true;
     }
   }
-}
-
-void weitersenden() {
-  digitalWrite(9, HIGH);
-  digitalWrite(8, LOW);
-  digitalWrite(7, LOW);
-  digitalWrite(6, HIGH);
-  
-  digitalWrite(9, LOW);
-  digitalWrite(8, HIGH);
-  digitalWrite(7, HIGH);
-  digitalWrite(6, LOW);
-
-  digitalWrite(9, LOW);
-  digitalWrite(8, LOW);
-  digitalWrite(7, LOW);
-  digitalWrite(6, LOW);
 }
