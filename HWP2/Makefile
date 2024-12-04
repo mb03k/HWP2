@@ -9,7 +9,7 @@ COMPILER_PATH = g++-12
 # Options
 CFLAGS   = -std=c++17 -O3 -Wall -Wextra
 LDFLAGS = -lb15fdrv
-OBJECTS  = main.o sentToRegister.o saveInVector.o linuxpipeCheck.o stringToHex.o
+OBJECTS  = main.o saveInVector.o linuxpipeCheck.o stringToHex.o
 OUT      = main.elf
 
 COMPILE = $(COMPILER_PATH) $(CFLAGS)
