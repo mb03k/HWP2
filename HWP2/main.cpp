@@ -4,7 +4,6 @@
 #include <b15f/b15f.h>
 
 #include "saveInVector.h"
-//#include "sentToRegister.h"
 #include "linuxpipeCheck.h"
 #include "stringToHex.h"
 
@@ -54,7 +53,7 @@ int main() {
     /*!!!WICHTIG!!!
      * setRegister(&DDRA, value) -> der Value ist bei 0x00 zum lesen gesetzt. Jetzt kann man auch getRegister benutzen
      *                           -> wenn Value auf 0xFF ist, kann man auf die Pins schreiben
-     * */
+    */
 
     std::remove("output.bin");
     readPathAndStart();
@@ -284,11 +283,12 @@ void sendCheckSum() {
  * -> kann man bestimmt auch mit delay machen - jeweils 10 ms zwei mal oder so
  */
 bool arduinoSaysNextBlock() {
-    for (int i=0; i<50; i++) {
-        if (drv.getRegister(&DDRA)) {
-            return true;
-        }
+    drv.delay_ms(10); // delay um das Signal einzulesen
+
+    if (drv.getRegister(&DDRA) == 1) {
+        return false;
     }
-    return false;
+
+    return true;
 }
 
