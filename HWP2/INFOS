@@ -1,0 +1,19 @@
+Datei um informationen zu bestimmten abläufen aufzuschreiben
+
+- B15 wartet (als sender) auf eine Antwort vom Arduino, ob der Block richtig eingelesen wurde.
+Das macht er indem er 10 ms wartet und den Pin liest und prüft ob eine 1 kommt
+    -> 0: alles richtig gesendet, nächster Block
+    -> 1: falscher Block gelesen,. Selebn ben erneut schicken
+
+To-Do:
+- drv.setRegister(&PINA) herausfinden was PINA / PORTA / ... genau ansprechen. Zum senden:
+    die ersten zwei MSB der 8 pins werden als Pin für die Prüfsumme belegt. Sprich (arduinos pins):
+    X|X|0|0|0|0|0|0 -> XX sind für Prüfsumme
+    0|0|X|X|X|X|X|X -> DDRD, gleichzeitig auslesbar
+- if (Serial.available() > 0) { // Überprüfen, ob Daten verfügbar sind
+          String empfangeneDaten = Serial.readString(); // Liest die empfangenen Daten
+          Serial.print("Empfangen: ");
+          Serial.println(empfangeneDaten); // Gibt die Daten zurück (zum Debuggen)
+          // Hier kannst du weitere Logik hinzufügen, z. B. LEDs schalten, Motoren steuern, etc.
+      }
+  Zu Arduino hinzufügen
