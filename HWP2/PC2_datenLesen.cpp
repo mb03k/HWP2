@@ -12,7 +12,7 @@ void writeToFile();
 void writeToBin(unsigned char val);
 
 std::vector<int> werteVec;
-std::vector<int> checkSum;
+int checkSum;
 
 bool readCheckSum = false;
 
@@ -66,7 +66,7 @@ int main() {
     tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // Raw input
 
     // Apply the settings
-    tcsetattr(serial_port, TCSANOW, &tty);
+    tcsetattr(fd, TCSANOW, &tty);
 
     /* VON BEN ALT -> if(tcsetattr) würde ich erstmal drinnen lassen
      * bzw den Aufruf über diesen Text */
@@ -94,41 +94,43 @@ int main() {
 
     // Daten lesen
     unsigned char buf[256]; // Größerer Puffer
-    int counter = 0;
+    int valuesRead = 0;
     while (true) {
         memset(buf, 0, sizeof(buf)); // Buffer leeren
         int n = read(fd, &buf, sizeof(buf) - 1); // Bis zu sizeof(buf)-1 Bytes lesen
         
-        if (n > 0) {
+        if (n > 0) { // wenn Daten gelesen werden
             // Byte als Binärwert ausgeben
             int binary(buf[0]); // 2 Bit pro Byte
             int bin(buf[0] & 0b11);
 
             if (binary>0) {
-                if (binary == 1) {
-                    std::cout << "!!!ANFANG BLOCK!!!" << std::endl;
-                    counter = 0;
-                    readCheckSum = false;
-                }
+                switch(binary) {
+                    case 1:
+                        std::cout << "!!!ANFANG BLOCK!!!" << std::endl;
+                        valuesRead = 0;
+                        readCheckSum = false;
+                        break;
+                    case 2:
+                        std::cout << "---ENDE BLOCK---" << std::endl;
+                        readCheckSum = true;
+                        valuesRead = 0;
+                        break;
+                    case 3:
+                        std::cout << "***ENDE SENDEN***" << std::endl;
+                        break;
+                    default:
+                        valuesRead++;
 
-                if (binary == 2) {
-                    std::cout << "---ENDE BLOCK---" << std::endl;
-                    readCheckSum = true;
-                    counter = 0;
-                }
-
-                if (binary == 3) {
-                    break;
-                }
-                
-                if (readCheckSum) {
-                    counter++;
-                    std::cout << "PS: "<<std::bitset<8>(binary)<< " - " << counter<<std::endl;
-                }
-                else if (binary >= 8) {
-                    counter++;
-                    std::cout << std::bitset<8>(binary)<< " - " << counter<<std::endl;
-                    werteVec.push_back(bin);
+                        if (readCheckSum) {
+                            std::cout << "PS: "<<std::bitset<8>(binary)<< " - " << valuesRead;
+                            checkSum += (int)bin;
+                            std::cout << " - checkSum = " << checkSum << std::endl;
+                        }
+                        else if (binary >= 8) {
+                            std::cout << std::bitset<8>(binary)<< " - " << valuesRead<<std::endl;
+                            werteVec.push_back(bin);
+                        }
                 }
             }
 
@@ -217,7 +219,6 @@ int main() {
 }
 
 void writeToFile() {
-
     // Binärdatei schreiben
     //writeBitsToBinaryFile("output.bin");
 
