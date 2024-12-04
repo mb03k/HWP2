@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
-#include <iomanip>
 
 bool isBinaryFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
@@ -35,24 +34,4 @@ bool isPath(const std::string& input) {
     }
 
     return false;
-}
-
-void convertToHEX(std::string eingabe) {
-    // Buffer für Eingabe
-    char buffer[1024];
-    std::ostringstream hexOutput;
-
-    // Lesen von stdin (Pipedaten)
-    while (std::cin.read(buffer, sizeof(buffer)) || std::cin.gcount() > 0) {
-        std::streamsize bytesRead = std::cin.gcount();
-
-        // Konvertiere jeden Byte in Hex
-        for (std::streamsize i = 0; i < bytesRead; ++i) {
-            hexOutput << std::hex << std::setfill('0') << std::setw(2)
-                      << static_cast<unsigned int>(static_cast<unsigned char>(buffer[i]));
-        }
-    }
-
-    // Schreibe Hex-Darstellung in die Ausgabe
-    std::cout << hexOutput.str() << std::endl;
 }
