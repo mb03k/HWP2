@@ -49,16 +49,11 @@ int saveInVector(const std::string& filepath) {
     return 0;
 }
 
-
-
-std::string getChunkAsHexString( size_t offset) {
+std::string getChunkAsHexString(size_t offset) {
     if (offset >= chunk.size()) {
         throw std::out_of_range("Index außerhalb des gültigen Bereichs!");
     }
-
-    const std::vector<unsigned char>& chunk1 = chunk[offset];
     std::ostringstream hexStream;
-
     for (unsigned char byte : chunk[offset]) {
         hexStream
         << std::hex
