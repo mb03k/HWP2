@@ -1,0 +1,1 @@
+clang++ -std=c++17 -Wall PC2_writeToB15.cpp -o pc2_write && clear && ./pc2_write 
