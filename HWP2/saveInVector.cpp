@@ -12,8 +12,7 @@ int saveInVector(const std::string& filepath) {
     // Datei öffnen
     std::ifstream file(filepath, std::ios::binary);
     if (!file) {
-        std::cout << "Fehler beim Öffnen der Datei! saveInVector" << std::endl;
-        //std::cout << "Current path is " << std::filesystem::current_path();
+        std::cout << "Fehler beim Öffnen der Datei! '" << filepath << "'" << std::endl;
         return 1;
     }
 
