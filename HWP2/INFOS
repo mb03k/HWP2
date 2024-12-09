@@ -3,9 +3,11 @@ Datei um informationen zu bestimmten abläufen aufzuschreiben
 - B15 wartet (als sender) auf eine Antwort vom Arduino, ob der Block richtig eingelesen wurde.
 Das macht er indem er 10 ms wartet und den Pin liest und prüft ob eine 1 kommt
     -> 0: alles richtig gesendet, nächster Block
-    -> 1: falscher Block gelesen,. Selebn ben erneut schicken
+    -> 1: falscher Block gelesen, selben Block erneut schicken
 
 To-Do:
+- beim PC-einlesen wird die Prüfsumme falsch berechnet (glaube ich). Es werden aktuell jeweils die zwei binärwerte
+aufaddiert, was keinen Sinn ergibt. Sollte eher ein Bitshift sein... demnach mit Vektor arbeiten
 - drv.setRegister(&PINA) herausfinden was PINA / PORTA / ... genau ansprechen. Zum senden:
     die ersten zwei MSB der 8 pins werden als Pin für die Prüfsumme belegt. Sprich (arduinos pins):
     X|X|0|0|0|0|0|0 -> XX sind für Prüfsumme
