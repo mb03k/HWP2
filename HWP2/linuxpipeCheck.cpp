@@ -7,7 +7,6 @@ bool isBinaryFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open()) {
         std::cerr << "Fehler beim Öffnen der Datei." << std::endl;
-        //std::cout << "Current path is " << std::filesystem::current_path();
         return false;
     }
 
