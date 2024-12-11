@@ -6,23 +6,23 @@
 #include <filesystem>
 
 // Vektor für alle Blöcke
-std::vector<std::vector<unsigned char>> dataChunk;
+std::vector<std::vector<unsigned char>> dataChunks;
 
 void saveInVector(const std::string& input) {
     std::vector<unsigned char> chunk;
 
     for (int i=0; i<input.length(); i++) {
         if (i % 16 == 0) {
-            dataChunk.push_back(chunk);
+            dataChunks.push_back(chunk);
             chunk.clear();
         }
         chunk.push_back(input.at(i));
     }
     if (input.length() % 16 != 0) { // letzten chunk der evtl nicht voll ist einfügen
-        data.push_back(chunk);
+        dataChunks.push_back(chunk);
     }
 
-    for (std::vector<unsigned char> chunk : data) {
+    for (std::vector<unsigned char> chunk : dataChunks) {
         for (unsigned char c : chunk) {
             std::cout << c << " ";
         }
@@ -31,11 +31,11 @@ void saveInVector(const std::string& input) {
 }
 
 std::string getChunkAsHexString(size_t offset) {
-    if (offset >= chunk.size()) {
+    if (offset >= dataChunks.size()) {
         throw std::out_of_range("Index außerhalb des gültigen Bereichs!");
     }
     std::ostringstream hexStream;
-    for (unsigned char byte : chunk[offset]) {
+    for (unsigned char byte : dataChunks[offset]) {
         hexStream
         << std::hex
         << std::setw(2)
@@ -48,7 +48,7 @@ std::string getChunkAsHexString(size_t offset) {
 }
 
 int getVecSize() {
-    return chunk.size();
+    return dataChunks.size();
 }
 
 void setChunk(std::vector<std::vector<unsigned char>>& newDataChunk) {
