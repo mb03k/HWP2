@@ -264,7 +264,7 @@ void writeToFile() {
                             | (i[j+1] << 4)
                             | (i[j+2] << 2)
                             | i[j+3];
-            std::cout.put(val);
+            std::cout.put(val); // terminal ausgabe (./lesen > empfangeneDaten.bin)
         }
     }
 }   

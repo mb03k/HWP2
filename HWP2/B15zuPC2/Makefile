@@ -1,30 +1,34 @@
-# Name: Makefile
-# Project: B15F (board15 Famulus Edition)
-# Author: Tristan Krause
-# Creation Date: 2019-05-15
-
-# Environment
 COMPILER_PATH = g++
 
-# Options
+# Optionen
 CFLAGS   = -std=c++17 -O3 -Wall -Wextra
-#LDFLAGS = -lb15fdrv
-OBJECTS  = main.o saveInVector.o
-OUT      = main.elf
 
+# Objekte
+SENDER_OBJECTS = Sender.o saveInVector.o
+EMPF_OBJECTS   = Empfaenger.o
+
+# Ausgabedateien
+SENDER_OUT     = sender.elf
+EMPF_OUT       = empfaenger.elf
+
+# Kompilierungsregel
 COMPILE = $(COMPILER_PATH) $(CFLAGS)
 
-main: $(OBJECTS)
-	$(COMPILE) $(OBJECTS) -o $(OUT) $(LDFLAGS)
+# Standardziel (optional, wenn `make` ohne Argumente ausgeführt wird)
+all: sender empfaenger
 
-help:
-	@echo "This Makefile has the following targets:"
-	@echo "make main .... to compile"
-	@echo "make clean ... to delete objects and executables"
-	
-clean:
-	@echo "Cleaning..."
-	rm -f $(OBJECTS) $(OUT) *.bin gnuplotscript.gp
+# Ziel für den Sender
+sender: $(SENDER_OBJECTS)
+	$(COMPILE) -o $(SENDER_OUT) $(SENDER_OBJECTS)
 
-.cpp.o:
+# Ziel für den Empfänger
+empfaenger: $(EMPF_OBJECTS)
+	$(COMPILE) -o $(EMPF_OUT) $(EMPF_OBJECTS)
+
+# Regeln für die Objektdateien
+%.o: %.cpp
 	$(COMPILE) -c $< -o $@
+
+# Aufräumen
+clean:
+	rm -f *.o $(SENDER_OUT) $(EMPF_OUT)
