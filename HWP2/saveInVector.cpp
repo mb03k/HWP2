@@ -6,46 +6,28 @@
 #include <filesystem>
 
 // Vektor für alle Blöcke
-std::vector<std::vector<unsigned char>> chunk;
+std::vector<std::vector<unsigned char>> dataChunk;
 
-int saveInVector(const std::string& filepath) {
-    // Datei öffnen
-    std::ifstream file(filepath, std::ios::binary);
-    if (!file) {
-        std::cout << "Fehler beim Öffnen der Datei! '" << filepath << "'" << std::endl;
-        return 1;
-    }
+void saveInVector(const std::string& input) {
+    std::vector<unsigned char> chunk;
 
-    // Buffer für 16 Bytes
-    std::vector<unsigned char> buffer(16);
-
-    // Daten lesen und speichern
-    while (file.read(reinterpret_cast<char*>(buffer.data()), buffer.size()) || file.gcount() > 0) {
-        // Anzahl der gelesenen Bytes
-        std::streamsize bytesRead = file.gcount();
-
-        // Neuen Block erstellen und hinzufügen
-        std::vector<unsigned char> block(buffer.begin(), buffer.begin() + bytesRead);
-        chunk.push_back(block);
-
-        // Wenn die Datei zu Ende ist, wird möglicherweise ein unvollständiger Block gelesen
-        if (bytesRead < buffer.size()) {
-            break;
+    for (int i=0; i<input.length(); i++) {
+        if (i % 16 == 0) {
+            dataChunk.push_back(chunk);
+            chunk.clear();
         }
+        chunk.push_back(input.at(i));
+    }
+    if (input.length() % 16 != 0) { // letzten chunk der evtl nicht voll ist einfügen
+        data.push_back(chunk);
     }
 
-    file.close();
-
-    // Ausgabe der gespeicherten Blöcke
-    for (size_t i = 0; i < chunk.size(); ++i) {
-        std::cout << "Block " << i + 1 << ": ";
-        for (unsigned char byte : chunk[i]) {
-            std::cout << std::hex << std::setw(2) << std::setfill('0')
-                      << static_cast<int>(byte) << " ";
+    for (std::vector<unsigned char> chunk : data) {
+        for (unsigned char c : chunk) {
+            std::cout << c << " ";
         }
         std::cout << std::endl;
     }
-    return 0;
 }
 
 std::string getChunkAsHexString(size_t offset) {
@@ -69,6 +51,6 @@ int getVecSize() {
     return chunk.size();
 }
 
-void setChunk(std::vector<std::vector<unsigned char>>& newChunk) {
-    chunk = newChunk;
+void setChunk(std::vector<std::vector<unsigned char>>& newDataChunk) {
+    dataChunks = newDataChunk;
 }
