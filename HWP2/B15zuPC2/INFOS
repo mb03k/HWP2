@@ -1,0 +1,42 @@
+
+
+Datei um informationen zu bestimmten Abläufen zu dokumentieren
+
+
+B15 zu PC:
+    PROGRAMM_START:
+        - Der PC - welcher mit dem B15 verbunden ist - liest einen Pfad oder einen Text ein. Prüft ob dieser zu
+        einer Datei führt (mit .bin endet) oder ein String ist.
+        - Speichert diese Daten in HEX in einem 2D Vektor ab; mit n vielen Chunks
+        - Pro Chunk werden 16 Zeichen gespeichert (= 64 bits)
+
+    ARDUINO_IDEE:
+        Fungiert ausschließlich als übertragender Teil. Er ändert nichts an den empfangenen Daten, sondern sendet
+        diese ausschließlich weiter
+        Im Fall dass die Prüfsumme des PCs falsch ist, sendet dieser zum Arduino den Wert 600 (unabhängig davon wie
+        groß er ist. Er muss nur > 0 sein um eingelesen zu werden). Der Arduino setzt in diesem Fall den PIN9 für
+        250 ms auf HIGH
+
+    PROGRAMM_ABLAUF:
+        Das Programm empfängt alle Daten und wertet diese aus, da es mehrere Sonderzeichen gibt
+        Anm.: die führende 0 (MSB) ist in diesem Fall der Stellvertreter für die Prüfsumme
+        -> 0000 low clock, wird nicht beachtet
+        -> 0001 der Anfang eines Blocks. Werte auf Start zurücksetzen und neuen Block einlesen
+        -> 0010 Ende eines Blocks. Jetzt kommt die Prüfsumme (PS)
+        -> 0011 Ende der Prüfsumme. Jetzt folgt ein neuer Block
+        -> 0001, 0001 zusätzliche Fehlerbehandlung um falsche Daten zu erkennen. Nachdem die PS mit den positiven Bits
+                      in der Bitfolge berechnet wird kann es vorkommen, dass der Wert 0100 übertragen wird (in int eine
+                      0, da nur die letzten zwei Bits relevant sind). Dieser verändert nicht die Prüfsumme aber ändert
+                      alle empfangenen Werte. Beim vergleichen der empfangenen und berechneten Prüfsumme wird geprüft
+                      ob genau 64 Werte übertragen werden, oder ob < 64 Werte empfangen wurden UND es der letzte Block
+                      ist, da der letzte Datenblock nicht zwingend 64 Werte beinhalten muss
+        -> 0011, 0011 signalisiert dass das Senden abgeschlossen ist
+        -> 01XX Werte werden übertragen und in einem 2D Vektor gespeichert
+        -> 1XXX Prüfsumme wird auf falsch (1) gesetzt, damit der selbe Block erneut eingelesen wird
+
+    PROGRAMM_ENDE:
+        B15 sendet eine bestimmte Zeichenkette (2x 0001 für den letzten Block), (2x 0011 für das Ende des sendens)
+        um zu signalisieren, dass das Senden endet und kein Block folgt
+        Der PC empfängt diese und wertet sie aus
+        Danach setzt er eine EXIT_LOOP-flag auf false um die while schleife zu verlassen
+        PC speichert
