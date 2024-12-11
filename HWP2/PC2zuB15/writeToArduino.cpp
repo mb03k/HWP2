@@ -83,7 +83,7 @@ void clearBufferAndReadData() {
     // Normally you wouldn't do this memset() call, but since we will just receive
     // ASCII data for this example, we'll set everything to 0 so we can
     // call printf() easily.
-    memset(&read_buf, '\0', sizeof(read_buf)); // Buffer leeren
+    memset(&read_buf, 0, sizeof(read_buf)); // Buffer leeren
     // read() verursacht einen delay von ca. 1-2 Sekunden
     num_bytes = read(serial_port, &read_buf, sizeof(read_buf)); // bytes einlesen
 }
@@ -96,29 +96,34 @@ void writeToB15(int& val) {
         usleep(2000000); // kann die ersten zeichen ohne timeout nicht senden (??)
     }
 
-    char msg = '0' + val;  // Zahl in ASCII-Zeichen umwandeln
-    write(serial_port, &msg, sizeof(msg));
 
-    usleep(50000);
+    char msg1 = '0' + val;  // Zahl in ASCII-Zeichen umwandeln
+    write(serial_port, &msg1, sizeof(msg1));
 
-    msg = '0' + 0;  // Zahl in ASCII-Zeichen umwandeln
-    write(serial_port, &msg, sizeof(msg));
+    usleep(20000);
 
-    usleep(50000);
+    char msg2 = '0' + 0;  // Zahl in ASCII-Zeichen umwandeln
+    write(serial_port, &msg2, sizeof(msg2));
+
+    usleep(20000);
 }
 
 bool checkSumIsFine() {
-
     clearBufferAndReadData();
+
+    usleep(200000);
 
     if (num_bytes > 0) {
         int binary(read_buf[0] & 0b01000000); // alle Daten einlesen
+        std::cout << "BINÄR PS: " << std::bitset<8>(binary) << std::endl;
 
         if (__builtin_popcount(binary) >= 1) {
             std::cerr << "\tFEHLER ERKANNT: " << std::bitset<8>(binary) << std::endl; 
+            memset(&read_buf, '\0', sizeof(read_buf)); // Buffer leeren
             return false;
         }
     }
 
+    memset(&read_buf, '\0', sizeof(read_buf)); // Buffer leeren
     return true;
 }

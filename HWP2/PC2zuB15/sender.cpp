@@ -52,14 +52,9 @@ void writeLSBtoRegister(char ch, int msb);
 
 
 int main() {
-    std::remove("output.bin");
+    std::remove("output.bin"); // damit keine Werte aus der vorherigen Datei bestehen bleiben
     readPathAndStart();
-    while (true) {
-        int val = 1;
-        writeToArduino(val);
-        val = 3;
-        writeToArduino(val);
-    }
+
     return 0;
 }
 
@@ -107,7 +102,6 @@ void startSending() {
             i++;
         } else {
             std::cout << "!!!!!!! FALSCHE PS ERKANNT !!!!!!!" << std::endl;
-            usleep(2000000);
         }
     }
     sendEndOfSending();

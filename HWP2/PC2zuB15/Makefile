@@ -1,29 +1,31 @@
-# Compiler and flags
-CXX = g++
-CXXFLAGS = -Wall -std=c++17
-LDFLAGS = 
+COMPILER_PATH = g++
 
-# Target executable
-TARGET = main.elf
+# Optionen
+CFLAGS   = -std=c++17 -O3 -Wall -Wextra
 
-# Source files
-SRCS = PC2_writeToB15.cpp writeToArduino.cpp
+# Objekte
+SENDER_OBJECTS = sender_neu.o
+EMPF_OBJECTS   = empfaenger.o
 
-# Object files
-OBJS = $(SRCS:.cpp=.o)
+# Ausgabedateien
+SENDER_OUT     = sender.elf
+EMPF_OUT       = empfaenger.elf
 
-# Header files
-HEADERS = writeToArduino.h
+# Kompilierungsregel
+COMPILE = $(COMPILER_PATH) $(CFLAGS)
 
-# Rule to build the target
-$(TARGET): $(OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^
+# Ziel für den Sender
+sender: $(SENDER_OBJECTS)
+	$(COMPILE) -o $(SENDER_OUT) $(SENDER_OBJECTS)
 
-# Rule to compile .cpp files into .o files
-%.o: %.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Ziel für den Empfänger
+empfaenger: $(EMPF_OBJECTS)
+	$(COMPILE) -o $(EMPF_OUT) $(EMPF_OBJECTS)
 
-# Clean up build files
-.PHONY: clean
+# Regeln für die Objektdateien
+%.o: %.cpp
+	$(COMPILE) -c $< -o $@
+
+# Aufräumen
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f *.o $(SENDER_OUT) $(EMPF_OUT)

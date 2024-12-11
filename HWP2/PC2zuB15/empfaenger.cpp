@@ -13,7 +13,6 @@ bool checkSumsAreEqual();
 void writeToFile();
 void writeToBin(unsigned char val);
 
-
 B15F& drv = B15F::getInstance();
 bool LASTBLOCK = false;
 bool LASTBLOCK_CHECK = false;
@@ -34,6 +33,7 @@ int counter = 1;
 void handleInput();
 int binary = 0;
 int bin = 0;
+int switch_val = 0;
 
 int main() {
     drv.setRegister(&DDRA, 0x47);
@@ -56,13 +56,14 @@ int main() {
     //EXIT_WHILE = true;
     while (!EXIT_WHILE) {
         uint8_t pina = drv.getRegister(&PINA);
-        binary = (pina >> 3) & 0b1111;
+        binary = (pina >> 3) & 0b0111;
         bin = binary & 0b011;
+        switch_val = binary & 0b0111;
 
         if (alterWert!=binary) { // nur einen Wert einlesen
             alterWert = (int)binary;
             if ((pina > 0)) {
-                //std::cout << "port: " << std::bitset<4>(relevantBits) <<std::endl; 
+                //std::cerr << "port: " << std::bitset<4>(bin) << std::endl; 
                 handleInput();
             }
         }
@@ -72,7 +73,7 @@ int main() {
 }
 
 void handleInput() {
-    switch(binary) {
+    switch(switch_val) {
         case 1:
             // unnötig -> ABER
             // testen ob in einem Block mehr als 64 Zeichen gesendet wurde
@@ -84,7 +85,7 @@ void handleInput() {
             } else {
                 LASTBLOCK = false;
             }
-            std::cout << "***ANFANG BLOCK***" << std::endl;
+            std::cerr << "***ANFANG BLOCK***" << std::endl;
             setCorrectCheckSum();
             calculatedCheckSum = 0;
             receivedCheckSum = 0;
@@ -95,7 +96,7 @@ void handleInput() {
             break;
 
         case 2:
-            std::cout << "---JETZT PS---" << std::endl;
+            std::cerr << "---JETZT PS---" << std::endl;
             READCS = true;
             ENDOFSENDING = false;
             LASTBLOCK_CHECK = false;
@@ -103,17 +104,21 @@ void handleInput() {
         
         case 3: 
             if (ENDOFSENDING) {
-                std::cout << "!!!ENDE SENDEN!!!" << std::endl;
+                std::cerr << "!!!ENDE SENDEN!!!" << std::endl;
                 EXIT_WHILE = true;
                 break;
             }
 
-            std::cout << "___ENDE PS___" << std::endl;
             calculateCS();
 
             if (!checkSumsAreEqual() || (counter != 64 && !LASTBLOCK)) {
-                std::cout << "\tFALSCHE PS counter "<< counter << std::endl;
+                std::cerr << "\tFALSCHE PS counter "<< counter << std::endl;
                 valVec[offset].clear();
+                std::cerr << "valVec Werte: "<<std::endl;
+                for (int i : valVec[offset]) {
+                    std::cerr << i << " ";
+                }
+                std::cerr << std::endl;
                 counter = 0;
                 calculatedCheckSum = 0;
                 setWrongCheckSum();
@@ -130,11 +135,11 @@ void handleInput() {
         default:
             if (READCS) {
                 csVec.push_back(bin);
-                std::cout << "PS: " << std::bitset<8>(binary) << " - " << std::bitset<2>(bin) << std::endl;
+                std::cerr << "PS: " << std::bitset<4>(binary) << " - " << std::bitset<2>(bin) << std::endl;
             } else if (binary >= 4) {
 
-                std::cout
-                    << std::bitset<8>(binary)
+                std::cerr
+                    << std::bitset<4>(binary)
                     << " - pc: "
                     << __builtin_popcount(bin)
                     << " - " 
@@ -155,12 +160,12 @@ void handleInput() {
 }
 
 void setCorrectCheckSum() {
-    std::cout << "RICHTIGE CS SETZEN" << std::endl;
+    std::cerr << "RICHTIGE CS SETZEN" << std::endl;
     drv.setRegister(&PORTA, 0);
 }
 
 void setWrongCheckSum() {
-    std::cout << "FALSCHE CS SETZEN" << std::endl;
+    std::cerr << "FALSCHE CS SETZEN" << std::endl;
     drv.setRegister(&PORTA, 64); // 64 -> 0b01000000
 }
 
@@ -179,7 +184,7 @@ void calculateCS() {
 }
 
 bool checkSumsAreEqual() {
-    std::cout
+    std::cerr
         << "\tberechnete Prüfsumme: "
         << calculatedCheckSum
         << " - erhaltene Prüfsumme: "
@@ -195,7 +200,7 @@ void writeToFile() {
                             | (i[j+1] << 4)
                             | (i[j+2] << 2)
                             | i[j+3];
-            writeToBin(val);
+            std::cout.put(val);
         }
     }
 }   
