@@ -1,219 +1,177 @@
+//
+// Created by Matthes Böttcher on 15.12.24.
+//
 
+#include "empfangen_PC.h"
 #include <iostream>
-#include <vector>
-#include <bitset>
-#include <fstream>
+#include <b15f/b15f.h>
 
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h> // Contains file controls like O_RDWR
-#include <errno.h> // Error integer and strerror() function
-#include <termios.h> // Contains POSIX terminal control definitions
-#include <unistd.h> // write(), read(), close()
+#include "writeToArduino.h"
 
-#include <thread>
-
-#include "empfangen_B15.h"
-
-/*
- * https://blog.mbedded.ninja/programming/operating-systems/linux/linux-serial-ports-using-c-cpp/
- * Von diesem Blog -> sehr detailliert
- */
-
-void calcReceivedCheckSumFromVec();
 void handleInput();
-void clearBufferAndReadData();
-void writeToFile();
-void writeToBin(unsigned char val);
-void sendBlockAgain();
-void dontSendBlockAgain();
 
-void setWrongCheckSum();
 void setCorrectCheckSum();
+void setWrongCheckSum();
 void calculateBitwiseCheckSum(int& bin);
 void calculateCS();
 bool checkSumsAreEqual();
+void writeToFile();
+void writeToBin(unsigned char val);
 
-int serial_port;
+B15F& drv = B15F::getInstance();
+bool LASTBLOCK = false;
+bool LASTBLOCK_CHECK = false;
+bool ENDOFSENDING = false;
+bool READCS = false;
+bool EXIT_WHILE = false;
 
-// Write to serial port
-unsigned char msg[] = { 'H', 'e', 'l', 'l', 'o', '\r' };
-
-// Allocate memory for read buffer, set size according to your needs
-char read_buf [256]; // in meinem Programm unsigned
-
-// Read bytes. The behaviour of read() (e.g. does it block?,
-// how long does it block for?) depends on the configuration
-// settings above, specifically VMIN and VTIME
-int num_bytes;
-
-// für switch case
-std::vector<std::vector<int> > werteVec;
+std::vector<std::vector<int>> werteVec;
+std::vector<std::vector<int>> valVec;
 std::vector<int> checkSumVec;
+std::vector<int> csVec;
 int calculatedCheckSum = 0; // die man mit jedem Wert eingelesen hat
 int receivedCheckSum = 0; // die man zum Ende bekommen hat
 bool readCheckSum = false;
 int offset = 0;
-bool READCS = false;
-bool ENDOFSENDING = false;
-bool LASTBLOCK_CKECK = false;
-bool LASTBLOCK = false;
-std::vector<std::vector<int> > valVec;
-std::vector<int> csVec;
+int counter = 1;
 
-int init_reading() {
-    // Open the serial port. Change device path as needed (currently set to an standard FTDI USB-UART cable type device)
-    serial_port = open("/dev/tty000", O_RDWR);
+void handleInput();
+int binary = 0;
+int bin = 0;
+int switch_val = 0;
 
-    // Create new termios struct, we call it 'tty' for convention
-    struct termios tty;
+int main() {
+    drv.setRegister(&DDRA, 0x47);
+    drv.setRegister(&PORTA, 0x00);
+    // aktueller Test:
+    // PINS so anpassen, dass wir auf welchen lesen können und auf den anderen schreiben
+    // -> 0b01000111
+    // 7: für empfangene Daten PS schreiben
+    // 6: für geschriebene Daten PS empfangen
+    // 5, 4, 3: Daten von anderen PC empfangen
+    // 2, 1, 0: Daten an anderen PC senden
+    //  (von MSB zu LSB)
+    //  1: schreiben, 0: lesen
 
-    // Read in existing settings, and handle any error
-    if(tcgetattr(serial_port, &tty) != 0) {
-        std::cerr << "Fehler USB1 zu öffnen. Ende" << std::endl;
-        return 1;
-    }
-
-    tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
-    tty.c_cflag &= ~CSTOPB; // Clear stop field, only one stop bit used in communication (most common)
-    tty.c_cflag &= ~CSIZE; // Clear all bits that set the data size
-    tty.c_cflag |= CS8; // 8 bits per byte (most common)
-    tty.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
-    tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
-
-    tty.c_lflag &= ~ICANON;
-    tty.c_lflag &= ~ECHO; // Disable echo
-    tty.c_lflag &= ~ECHOE; // Disable erasure
-    tty.c_lflag &= ~ECHONL; // Disable new-line echo
-    tty.c_lflag &= ~ISIG; // Disable interpretation of INTR, QUIT and SUSP
-    tty.c_iflag &= ~(IXON | IXOFF | IXANY); // Turn off s/w flow ctrl
-    tty.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
-
-    tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-    tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-
-    tty.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
-    tty.c_cc[VMIN] = 0;
-
-    // Set in/out baud rate to be 9600
-    cfsetispeed(&tty, B57600);
-    cfsetospeed(&tty, B57600);
-
-    // Save tty settings, also checking for error
-    if (tcsetattr(serial_port, TCSANOW, &tty) != 0) {
-        //printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
-        return 1;
-    }
-
-    // Hauptfunktion zum einlesen
-    handleInput();
-
-    close(serial_port);
-    return 0;
-}
-
-void handleInput() {
-    int valuesReadCounter = 0;
-    int counter = 1;
+    int alterWert = -1;
     valVec.resize(offset+1);
-    while (true) {
-        clearBufferAndReadData();
-        if (num_bytes > 0) {
-            int binary(read_buf[0] & 0b00001111); // alle Daten einlesen
-            int bin(read_buf[0] & 0b11); // Daten auf die relevanten kürzen
-            if (binary > 0) {
-                switch(binary) {
-                    case 1:
-                        // unnötig -> ABER
-                        // testen ob in einem Block mehr als 64 Zeichen gesendet wurde
-                        // -> es kann sein dass in dem Block eine '0100' gesendet wurde
-                        //    also dass keine neuen positiven Bits hinzugefügt wurden.
-                        //    Das würde aber trotzdem den Wert ändern -> wird hiermit abgefangen
-                        if (LASTBLOCK_CKECK) {
-                            LASTBLOCK = true;
-                        } else {
-                            LASTBLOCK = false;
-                        }
-                        std::cerr << "***ANFANG BLOCK***" << std::endl;
-                        calculatedCheckSum = 0;
-                        receivedCheckSum = 0;
-                        counter = 0;
-                        csVec.clear();
-                        ENDOFSENDING = false;
-                        LASTBLOCK_CKECK = true;
-                        break;
 
-                    case 2:
-                        std::cerr << "---JETZT PS---" << std::endl;
-                        READCS = true;
-                        ENDOFSENDING = false;
-                        LASTBLOCK_CKECK = false;
-                        break;
 
-                    case 3:
-                        if (ENDOFSENDING) {
-                            std::cerr << "!!!ENDE SENDEN!!!" << std::endl;
-                            goto exit_loop;
-                        }
 
-                        std::cerr << "___ENDE PS___" << std::endl;
-                        calculateCS();
+    //EXIT_WHILE = true;
+    while (!EXIT_WHILE) {
+        uint8_t pina = drv.getRegister(&PINA);
+        binary = (pina >> 3) & 0b0111;
+        bin = binary & 0b011;
+        switch_val = binary & 0b0111;
 
-                        if (!checkSumsAreEqual() || (counter != 64 && !LASTBLOCK)) {
-                            std::cerr << "\tFALSCHE PS counter "<< counter << std::endl;
-                            valVec[offset].clear();
-                            counter = 0;
-                            calculatedCheckSum = 0;
-                            setWrongCheckSum();
-                        } else {
-                            offset++;
-                            valVec.resize(offset+1);
-                        }
-
-                        READCS = false;
-                        ENDOFSENDING = true;
-                        LASTBLOCK_CKECK = false;
-                        break;
-
-                    default:
-                        if (READCS) {
-                            csVec.push_back(bin);
-                            std::cerr << "PS: " << std::bitset<8>(binary) << " - " << std::bitset<2>(bin) << std::endl;
-                        } else if (binary >= 4) {
-
-                            std::cerr
-                                    << std::bitset<8>(binary)
-                                    << " - "
-                                    << valuesReadCounter
-                                    << " - pb: "
-                                    << __builtin_popcount(bin)
-                                    << " - "
-                                    << counter
-                                    << std::endl;
-
-                            valVec[offset].push_back(bin);
-                            calculateBitwiseCheckSum(bin);
-                            ENDOFSENDING = false;
-                            LASTBLOCK_CKECK = false;
-                            counter++;
-                        }
-                }
+        if (alterWert!=binary) { // nur einen Wert einlesen
+            alterWert = (int)binary;
+            if ((pina > 0)) {
+                //std::cerr << "port: " << std::bitset<4>(bin) << std::endl;
+                handleInput();
             }
         }
     }
-    exit_loop: ;
+
     writeToFile();
 }
 
-// ------------
-void setWrongCheckSum() {
-    int val = 600;
-    write(serial_port, &val, sizeof(val));
+void handleInput() {
+    switch(switch_val) {
+        case 1:
+            // unnötig -> ABER
+            // testen ob in einem Block mehr als 64 Zeichen gesendet wurde
+            // -> es kann sein dass in dem Block eine '0100' gesendet wurde
+            //    also dass keine neuen positiven Bits hinzugefügt wurden.
+            //    Das würde aber trotzdem den Wert ändern -> wird hiermit abgefangen
+            if (LASTBLOCK_CHECK) {
+                LASTBLOCK = true;
+            } else {
+                LASTBLOCK = false;
+            }
+            std::cerr << "***ANFANG BLOCK***" << std::endl;
+            setCorrectCheckSum();
+            calculatedCheckSum = 0;
+            receivedCheckSum = 0;
+            counter = 0;
+            csVec.clear();
+            ENDOFSENDING = false;
+            LASTBLOCK_CHECK = true;
+            break;
+
+        case 2:
+            std::cerr << "---JETZT PS---" << std::endl;
+            READCS = true;
+            ENDOFSENDING = false;
+            LASTBLOCK_CHECK = false;
+            break;
+
+        case 3:
+            if (ENDOFSENDING) {
+                std::cerr << "!!!ENDE SENDEN!!!" << std::endl;
+                EXIT_WHILE = true;
+                break;
+            }
+
+            calculateCS();
+
+            if (!checkSumsAreEqual() || (counter != 64 && !LASTBLOCK)) {
+                std::cerr << "\tFALSCHE PS counter "<< counter << std::endl;
+                valVec[offset].clear();
+                std::cerr << "valVec Werte: "<<std::endl;
+                for (int i : valVec[offset]) {
+                    std::cerr << i << " ";
+                }
+                std::cerr << std::endl;
+                counter = 0;
+                calculatedCheckSum = 0;
+                setWrongCheckSum();
+            } else {
+                offset++;
+                valVec.resize(offset+1);
+            }
+
+            READCS = false;
+            ENDOFSENDING = true;
+            LASTBLOCK_CHECK = false;
+            break;
+
+        default:
+            if (READCS) {
+                csVec.push_back(bin);
+                std::cerr << "PS: " << std::bitset<4>(binary) << " - " << std::bitset<2>(bin) << std::endl;
+            } else if (binary >= 4) {
+
+                std::cerr
+                        << std::bitset<4>(binary)
+                        << " - pc: "
+                        << __builtin_popcount(bin)
+                        << " - "
+                        << counter
+                        << " - pb: "
+                        << bin
+                        << " - offset: "
+                        << offset
+                        << std::endl;
+
+                valVec[offset].push_back(bin);
+                calculateBitwiseCheckSum(bin);
+                ENDOFSENDING = false;
+                LASTBLOCK_CHECK = false;
+                counter++;
+            }
+    }
 }
 
 void setCorrectCheckSum() {
-    int val = 60;
-    write(serial_port, &val, sizeof(val));
+    std::cerr << "RICHTIGE CS SETZEN" << std::endl;
+    drv.setRegister(&PORTA, 0);
+}
+
+void setWrongCheckSum() {
+    std::cerr << "FALSCHE CS SETZEN" << std::endl;
+    drv.setRegister(&PORTA, 64); // 64 -> 0b01000000
 }
 
 void calculateBitwiseCheckSum(int& bin) {
@@ -240,25 +198,14 @@ bool checkSumsAreEqual() {
     return receivedCheckSum == calculatedCheckSum;
 }
 
-// ------------
-
-void clearBufferAndReadData() {
-    // Normally you wouldn't do this memset() call, but since we will just receive
-    // ASCII data for this example, we'll set everything to 0 so we can
-    // call printf() easily.
-    memset(&read_buf, '\0', sizeof(read_buf)); // Buffer leeren
-    num_bytes = read(serial_port, &read_buf, sizeof(read_buf)); // bytes einlesen
-}
-
 void writeToFile() {
-    std::cerr << "VEKTOR:"<<std::endl;
     for (std::vector<int> i : valVec) {
         for (int j=0; j<i.size(); j+=4) {
             unsigned char val = (i[j] << 6)
                                 | (i[j+1] << 4)
                                 | (i[j+2] << 2)
                                 | i[j+3];
-            std::cout.put(val); // terminal ausgabe (./lesen > empfangeneDaten.bin)
+            std::cout.put(val);
         }
     }
 }

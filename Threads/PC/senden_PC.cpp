@@ -54,11 +54,9 @@ int LASTBLOCK = BLOCK_START;
 bool SENDCHUNK = true;
 
 
-int main() {
-
+void init_sending() {
     std::remove("output.bin");
     readInputAndStart();
-    return 0;
 }
 
 void readInputAndStart() {
