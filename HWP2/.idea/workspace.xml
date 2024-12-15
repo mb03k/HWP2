@@ -13,35 +13,56 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c69778ba-cee8-4f57-bb09-8615e4382132" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/0personal.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/100random.bin" beforeDir="false" afterPath="$PROJECT_DIR$/100random.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2krandom.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/B15_zu_PC/B15_zu_PC.ino" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/B15zuPC2/Sender.o" beforeDir="false" afterPath="$PROJECT_DIR$/B15zuPC2/Sender.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/B15zuPC2/saveInVector.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/B15zuPC2/saveInVector.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/B15zuPC2/sender.elf" beforeDir="false" afterPath="$PROJECT_DIR$/B15zuPC2/sender.elf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/INFOS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_readAndWrite.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_readAndWrite.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_zu_B15/PC_zu_B15.ino" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Threads/B15/empfaengen.h" beforeDir="false" afterPath="$PROJECT_DIR$/Threads/B15/empfaengen.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Threads/B15/main.h" beforeDir="false" afterPath="$PROJECT_DIR$/Threads/B15/main.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Threads/B15/senden.h" beforeDir="false" afterPath="$PROJECT_DIR$/Threads/B15/senden.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Threads/b15.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Threads/b15.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/linuxpipeCheck.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.elf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/readWrite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saveBinInVector.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saveInVector.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saveInVector.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saveInVector.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/100random.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/1krandom.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15_zu_PC_ard/B15_zu_PC_ard.ino" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15_zu_PC_ard/OLD.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/0personal.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/100random.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/1krandom.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/2krandom.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/Empfaenger.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/Empfaenger.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/Empfaenger.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/INFOS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/Sender.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/Sender.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/empfaenger" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/empfaenger.elf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/empfangeneDaten" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/main_old.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/readWrite" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/saveInVector.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/saveInVector.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/saveInVector.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/B15zuPC2/sender.elf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/0personal.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/100random.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/1krandom.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/2krandom.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/empfaenger.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/empfangeneDaten.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/sender" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/sender.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/sender.elf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/sender_neu.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/sender_neu.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/writeToArduino.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC2zuB15/writeToArduino.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC_zu_B15_ard/PC_zu_B15_ard.ino" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/Arduino/Arduino.ino" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/B15/empfaengen.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/B15/empfaengen.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/B15/main" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/B15/main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/B15/main.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/B15/senden.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threads/B15/senden.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +117,9 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2q4r9DbQQh19L3opdb0b93IfZh6" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -131,7 +155,7 @@
       <workItem from="1734010799701" duration="192000" />
       <workItem from="1734079632643" duration="1103000" />
       <workItem from="1734181724752" duration="1225000" />
-      <workItem from="1734269019312" duration="7514000" />
+      <workItem from="1734269019312" duration="9637000" />
     </task>
     <servers />
   </component>
