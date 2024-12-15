@@ -114,7 +114,7 @@ bool checkSumIsFine() {
     usleep(200000);
 
     if (num_bytes > 0) {
-        int binary(read_buf[0] & 0b01000000); // alle Daten einlesen
+        int binary(read_buf[0] & 0b01000000); // gesendete 64 bedeutet falsche PS erkannt
         std::cout << "BINÄR PS: " << std::bitset<8>(binary) << std::endl;
 
         if (__builtin_popcount(binary) >= 1) {
