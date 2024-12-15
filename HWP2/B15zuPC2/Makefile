@@ -14,7 +14,6 @@ EMPF_OUT       = empfaenger.elf
 # Kompilierungsregel
 COMPILE = $(COMPILER_PATH) $(CFLAGS)
 
-# Standardziel (optional, wenn `make` ohne Argumente ausgeführt wird)
 all: sender empfaenger
 
 # Ziel für den Sender
