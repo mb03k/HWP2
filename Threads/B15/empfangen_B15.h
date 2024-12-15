@@ -6,7 +6,7 @@
 #define HWP2_EMPFAENGEN_H
 
 
-void init_reading();
+int init_reading();
 
 
 #endif //HWP2_EMPFAENGEN_H

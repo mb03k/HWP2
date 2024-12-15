@@ -61,7 +61,7 @@ bool LASTBLOCK = false;
 std::vector<std::vector<int> > valVec;
 std::vector<int> csVec;
 
-void init_reading() {
+int init_reading() {
     // Open the serial port. Change device path as needed (currently set to an standard FTDI USB-UART cable type device)
     serial_port = open("/dev/tty000", O_RDWR);
 
@@ -71,6 +71,7 @@ void init_reading() {
     // Read in existing settings, and handle any error
     if(tcgetattr(serial_port, &tty) != 0) {
         std::cerr << "Fehler USB1 zu öffnen. Ende" << std::endl;
+        return 1;
     }
 
     tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
@@ -101,12 +102,14 @@ void init_reading() {
     // Save tty settings, also checking for error
     if (tcsetattr(serial_port, TCSANOW, &tty) != 0) {
         //printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+        return 1;
     }
 
     // Hauptfunktion zum einlesen
     handleInput();
 
     close(serial_port);
+    return 0;
 }
 
 void handleInput() {

@@ -47,23 +47,12 @@ bool SENDchunkS = true;
 //B15F& drv = B15F::getInstance();
 
 void init_sending() {
-    //drv.setRegister(&DDRA, 0x0F); // Bit 0-7 Ausgabe // !!!! WICHTIG
     /*!!!WICHTIG!!!
      * setRegister(&DDRA, value) -> der Value ist bei 0x00 zum lesen gesetzt. Jetzt kann man auch getRegister benutzen
      *                           -> wenn Value auf 0xFF ist, kann man auf die Pins schreiben
     */
 
     //drv.setRegister(&DDRA, 0x47);
-    // aktueller Test:
-    // PINS so anpassen, dass wir auf welchen lesen können und auf den anderen schreiben
-    // -> 0b01000111
-    // 7: für empfangene Daten PS schreiben
-    // 6: für geschriebene Daten PS empfangen
-    // 5, 4, 3: Daten von anderen PC empfangen
-    // 2, 1, 0: Daten an anderen PC senden
-    //  (von MSB zu LSB)
-    //  1: schreiben, 0: lesen
-
     clearLEDs();
 
     std::remove("output.bin");
@@ -151,7 +140,7 @@ void sendInnerchunkS() {
     // -> LSB1: 10
     // -> LSB2: 00
     for (unsigned char ch : chunkS) {
-        usleep(1000 * 100);
+        usleep(1000 * 10);
         std::cout << "\t\tBYTE SENDEN: '" << ch << "' " << std::bitset<8>(ch) << std::endl;
 
         // MSB1
@@ -215,7 +204,7 @@ void calculatecheckSumS(unsigned char& val) {
 }
 
 void terminalMessageOfSending(int sendVal) {
-    usleep(1000 * 100);
+    usleep(1000 * 10);
 
     std::cout
             << "\t\tsend '"
@@ -245,39 +234,39 @@ void sendLowCLK() {
 }
 
 void sendBlockStartSequence() {
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout << "\tSTART BLOCK " << std::bitset<4>(BLOCK_START_S) << std::endl;
     writeToRegister(BLOCK_START_S);
 }
 
 void sendNowComescheckSumS() {
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout << "\tJETZT PS " << std::bitset<4>(NOW_CS)  << std::endl;
     writeToRegister(NOW_CS);
 }
 
 void sendEndOfcheckSumS() {
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout << "\tENDE PS " << std::bitset<4>(END_CS)  << std::endl;
     writeToRegister(END_CS);
 }
 
 void sendLASTBLOCK_SSequence() {
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout << "\tLETZTER BLOCK " << std::bitset<4>(LASTBLOCK_S) << std::endl;
     writeToRegister(LASTBLOCK_S);
 }
 
 void sendEndOfSending() {
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout << "\t0011 gesendet" << std::endl;
     writeToRegister(END_CS);
 
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout << "\t0011 gesendet" << std::endl;
     writeToRegister(END_CS);
 
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout << "*** ENDE SENDEN *** " << std::endl;
 }
 
@@ -291,7 +280,7 @@ void writeToRegister(int val) {
 }
 
 void sendcheckSumS() {
-    usleep(1000 * 100);
+    usleep(1000 * 10);
     std::cout
             << "\t\tPrüfsumme: "
             << (int)checkSumS
@@ -309,7 +298,7 @@ void sendcheckSumS() {
     }
 
     for (int i : bits) {
-        usleep(1000 * 100);
+        usleep(1000 * 10);
         std::cout << "\t\tPS send '" << i << "' bits: " << std::bitset<4>(i) << std::endl;
         writeToRegister(i);
         sendLowCLK();
