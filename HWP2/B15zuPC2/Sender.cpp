@@ -82,7 +82,6 @@ void readInputAndStart() {
         counter++;
 
         chunk.push_back(byte);
-
         // ein chunk mit 16 zeichen gefüllt
         if (counter % 16 == 0) {
             counter = 0;
@@ -93,6 +92,7 @@ void readInputAndStart() {
             startSending();
             chunk.clear();
             SENDCHUNK = true;
+
         }
     }
 
@@ -144,7 +144,7 @@ void sendInnerChunk() {
     // -> LSB1: 10
     // -> LSB2: 00
     for (unsigned char ch : chunk) {
-        std::cout << "\t\tWERT SENDEN: '" << ch << "' " << std::bitset<8>(ch) << std::endl;
+        std::cout << "\t\tBYTE SENDEN: '" << ch << "' " << std::bitset<8>(ch) << std::endl;
 
         // MSB1
         int msb1 = calculateMSB1(ch);
@@ -230,7 +230,7 @@ void delay100() {
 
 void sendLowCLK() {
     //delay100();
-    writeToRegister(0);
+    //writeToRegister(0);
     //delay100();
 }
 
@@ -270,7 +270,7 @@ void clearLEDs() {
 
 void writeToRegister(int val) {
     //drv.setRegister(&PORTA, val);
-    sendLowCLK();
+    //drv.setRegister(&PORTA, 0); // low CLK
 }
 
 void sendCheckSum() {
