@@ -6,11 +6,7 @@
 #define HWP2_SENDEN_H
 
 
-
-class senden {
-
-};
-
+void init_sending();
 
 
 #endif //HWP2_SENDEN_H

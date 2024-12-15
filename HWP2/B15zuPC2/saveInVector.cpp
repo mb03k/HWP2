@@ -10,7 +10,6 @@ std::vector<std::vector<unsigned char>> dataChunks;
 
 void saveInVector(const std::string& input) {
     std::vector<unsigned char> chunk;
-std::cout << "inputsize: " << input.length()<<std::endl;
     for (size_t i=0; i<input.length(); i++) {
         if ((i % 16 == 0) && (i > 0)) {
             dataChunks.push_back(chunk);

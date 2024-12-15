@@ -6,11 +6,7 @@
 #define HWP2_EMPFAENGEN_H
 
 
-
-class empfaengen {
-
-};
-
+void init_reading();
 
 
 #endif //HWP2_EMPFAENGEN_H

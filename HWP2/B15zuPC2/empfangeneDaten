@@ -1,0 +1,795 @@
+
+
+Chunk:
+'80 E4 3A 8F 2B 4A 40 B2 25 FD AA E1 44 07 68 B5 '
+	START BLOCK 0001
+		BYTE SENDEN: '€' 10000000
+		send '6' bits: 0110 (1)
+		send '4' bits: 0100 (2)
+		send '4' bits: 0100 (3)
+		send '4' bits: 0100 (4)
+
+
+		BYTE SENDEN: 'ä' 11100100
+		send '7' bits: 0111 (5)
+		send '6' bits: 0110 (6)
+		send '5' bits: 0101 (7)
+		send '4' bits: 0100 (8)
+
+
+		BYTE SENDEN: ':' 00111010
+		send '4' bits: 0100 (9)
+		send '7' bits: 0111 (10)
+		send '6' bits: 0110 (11)
+		send '6' bits: 0110 (12)
+
+
+		BYTE SENDEN: '' 10001111
+		send '6' bits: 0110 (13)
+		send '4' bits: 0100 (14)
+		send '7' bits: 0111 (15)
+		send '7' bits: 0111 (16)
+
+
+		BYTE SENDEN: '+' 00101011
+		send '4' bits: 0100 (17)
+		send '6' bits: 0110 (18)
+		send '6' bits: 0110 (19)
+		send '7' bits: 0111 (20)
+
+
+		BYTE SENDEN: 'J' 01001010
+		send '5' bits: 0101 (21)
+		send '4' bits: 0100 (22)
+		send '6' bits: 0110 (23)
+		send '6' bits: 0110 (24)
+
+
+		BYTE SENDEN: '@' 01000000
+		send '5' bits: 0101 (25)
+		send '4' bits: 0100 (26)
+		send '4' bits: 0100 (27)
+		send '4' bits: 0100 (28)
+
+
+		BYTE SENDEN: '²' 10110010
+		send '6' bits: 0110 (29)
+		send '7' bits: 0111 (30)
+		send '4' bits: 0100 (31)
+		send '6' bits: 0110 (32)
+
+
+		BYTE SENDEN: '%' 00100101
+		send '4' bits: 0100 (33)
+		send '6' bits: 0110 (34)
+		send '5' bits: 0101 (35)
+		send '5' bits: 0101 (36)
+
+
+		BYTE SENDEN: 'ı' 11111101
+		send '7' bits: 0111 (37)
+		send '7' bits: 0111 (38)
+		send '7' bits: 0111 (39)
+		send '5' bits: 0101 (40)
+
+
+		BYTE SENDEN: 'ª' 10101010
+		send '6' bits: 0110 (41)
+		send '6' bits: 0110 (42)
+		send '6' bits: 0110 (43)
+		send '6' bits: 0110 (44)
+
+
+		BYTE SENDEN: 'á' 11100001
+		send '7' bits: 0111 (45)
+		send '6' bits: 0110 (46)
+		send '4' bits: 0100 (47)
+		send '5' bits: 0101 (48)
+
+
+		BYTE SENDEN: 'D' 01000100
+		send '5' bits: 0101 (49)
+		send '4' bits: 0100 (50)
+		send '5' bits: 0101 (51)
+		send '4' bits: 0100 (52)
+
+
+		BYTE SENDEN: '' 00000111
+		send '4' bits: 0100 (53)
+		send '4' bits: 0100 (54)
+		send '5' bits: 0101 (55)
+		send '7' bits: 0111 (56)
+
+
+		BYTE SENDEN: 'h' 01101000
+		send '5' bits: 0101 (57)
+		send '6' bits: 0110 (58)
+		send '6' bits: 0110 (59)
+		send '4' bits: 0100 (60)
+
+
+		BYTE SENDEN: 'µ' 10110101
+		send '6' bits: 0110 (61)
+		send '7' bits: 0111 (62)
+		send '5' bits: 0101 (63)
+		send '5' bits: 0101 (64)
+
+
+ ------ 
+	JETZT PS 0010
+		PrÃ¼fsumme: 57 - 00111001
+		PS send '4' bits: 0100
+		PS send '7' bits: 0111
+		PS send '6' bits: 0110
+		PS send '5' bits: 0101
+	ENDE PS 0011
+
+
+Chunk:
+'98 79 21 49 D4 7A FE 33 1E 5B 36 B4 D0 1F CD E9 '
+	START BLOCK 0001
+		BYTE SENDEN: '˜' 10011000
+		send '6' bits: 0110 (1)
+		send '5' bits: 0101 (2)
+		send '6' bits: 0110 (3)
+		send '4' bits: 0100 (4)
+
+
+		BYTE SENDEN: 'y' 01111001
+		send '5' bits: 0101 (5)
+		send '7' bits: 0111 (6)
+		send '6' bits: 0110 (7)
+		send '5' bits: 0101 (8)
+
+
+		BYTE SENDEN: '!' 00100001
+		send '4' bits: 0100 (9)
+		send '6' bits: 0110 (10)
+		send '4' bits: 0100 (11)
+		send '5' bits: 0101 (12)
+
+
+		BYTE SENDEN: 'I' 01001001
+		send '5' bits: 0101 (13)
+		send '4' bits: 0100 (14)
+		send '6' bits: 0110 (15)
+		send '5' bits: 0101 (16)
+
+
+		BYTE SENDEN: 'Ô' 11010100
+		send '7' bits: 0111 (17)
+		send '5' bits: 0101 (18)
+		send '5' bits: 0101 (19)
+		send '4' bits: 0100 (20)
+
+
+		BYTE SENDEN: 'z' 01111010
+		send '5' bits: 0101 (21)
+		send '7' bits: 0111 (22)
+		send '6' bits: 0110 (23)
+		send '6' bits: 0110 (24)
+
+
+		BYTE SENDEN: 'ş' 11111110
+		send '7' bits: 0111 (25)
+		send '7' bits: 0111 (26)
+		send '7' bits: 0111 (27)
+		send '6' bits: 0110 (28)
+
+
+		BYTE SENDEN: '3' 00110011
+		send '4' bits: 0100 (29)
+		send '7' bits: 0111 (30)
+		send '4' bits: 0100 (31)
+		send '7' bits: 0111 (32)
+
+
+		BYTE SENDEN: '' 00011110
+		send '4' bits: 0100 (33)
+		send '5' bits: 0101 (34)
+		send '7' bits: 0111 (35)
+		send '6' bits: 0110 (36)
+
+
+		BYTE SENDEN: '[' 01011011
+		send '5' bits: 0101 (37)
+		send '5' bits: 0101 (38)
+		send '6' bits: 0110 (39)
+		send '7' bits: 0111 (40)
+
+
+		BYTE SENDEN: '6' 00110110
+		send '4' bits: 0100 (41)
+		send '7' bits: 0111 (42)
+		send '5' bits: 0101 (43)
+		send '6' bits: 0110 (44)
+
+
+		BYTE SENDEN: '´' 10110100
+		send '6' bits: 0110 (45)
+		send '7' bits: 0111 (46)
+		send '5' bits: 0101 (47)
+		send '4' bits: 0100 (48)
+
+
+		BYTE SENDEN: 'Ğ' 11010000
+		send '7' bits: 0111 (49)
+		send '5' bits: 0101 (50)
+		send '4' bits: 0100 (51)
+		send '4' bits: 0100 (52)
+
+
+		BYTE SENDEN: '' 00011111
+		send '4' bits: 0100 (53)
+		send '5' bits: 0101 (54)
+		send '7' bits: 0111 (55)
+		send '7' bits: 0111 (56)
+
+
+		BYTE SENDEN: 'Í' 11001101
+		send '7' bits: 0111 (57)
+		send '4' bits: 0100 (58)
+		send '7' bits: 0111 (59)
+		send '5' bits: 0101 (60)
+
+
+		BYTE SENDEN: 'é' 11101001
+		send '7' bits: 0111 (61)
+		send '6' bits: 0110 (62)
+		send '6' bits: 0110 (63)
+		send '5' bits: 0101 (64)
+
+
+ ------ 
+	JETZT PS 0010
+		PrÃ¼fsumme: 68 - 01000100
+		PS send '5' bits: 0101
+		PS send '4' bits: 0100
+		PS send '5' bits: 0101
+		PS send '4' bits: 0100
+	ENDE PS 0011
+
+
+Chunk:
+'2F BF 03 83 C2 B5 5A D5 4F F4 4E 2E 0B 67 11 BC '
+	START BLOCK 0001
+		BYTE SENDEN: '/' 00101111
+		send '4' bits: 0100 (1)
+		send '6' bits: 0110 (2)
+		send '7' bits: 0111 (3)
+		send '7' bits: 0111 (4)
+
+
+		BYTE SENDEN: '¿' 10111111
+		send '6' bits: 0110 (5)
+		send '7' bits: 0111 (6)
+		send '7' bits: 0111 (7)
+		send '7' bits: 0111 (8)
+
+
+		BYTE SENDEN: '' 00000011
+		send '4' bits: 0100 (9)
+		send '4' bits: 0100 (10)
+		send '4' bits: 0100 (11)
+		send '7' bits: 0111 (12)
+
+
+		BYTE SENDEN: 'ƒ' 10000011
+		send '6' bits: 0110 (13)
+		send '4' bits: 0100 (14)
+		send '4' bits: 0100 (15)
+		send '7' bits: 0111 (16)
+
+
+		BYTE SENDEN: 'Â' 11000010
+		send '7' bits: 0111 (17)
+		send '4' bits: 0100 (18)
+		send '4' bits: 0100 (19)
+		send '6' bits: 0110 (20)
+
+
+		BYTE SENDEN: 'µ' 10110101
+		send '6' bits: 0110 (21)
+		send '7' bits: 0111 (22)
+		send '5' bits: 0101 (23)
+		send '5' bits: 0101 (24)
+
+
+		BYTE SENDEN: 'Z' 01011010
+		send '5' bits: 0101 (25)
+		send '5' bits: 0101 (26)
+		send '6' bits: 0110 (27)
+		send '6' bits: 0110 (28)
+
+
+		BYTE SENDEN: 'Õ' 11010101
+		send '7' bits: 0111 (29)
+		send '5' bits: 0101 (30)
+		send '5' bits: 0101 (31)
+		send '5' bits: 0101 (32)
+
+
+		BYTE SENDEN: 'O' 01001111
+		send '5' bits: 0101 (33)
+		send '4' bits: 0100 (34)
+		send '7' bits: 0111 (35)
+		send '7' bits: 0111 (36)
+
+
+		BYTE SENDEN: 'ô' 11110100
+		send '7' bits: 0111 (37)
+		send '7' bits: 0111 (38)
+		send '5' bits: 0101 (39)
+		send '4' bits: 0100 (40)
+
+
+		BYTE SENDEN: 'N' 01001110
+		send '5' bits: 0101 (41)
+		send '4' bits: 0100 (42)
+		send '7' bits: 0111 (43)
+		send '6' bits: 0110 (44)
+
+
+		BYTE SENDEN: '.' 00101110
+		send '4' bits: 0100 (45)
+		send '6' bits: 0110 (46)
+		send '7' bits: 0111 (47)
+		send '6' bits: 0110 (48)
+
+
+		BYTE SENDEN: '' 00001011
+		send '4' bits: 0100 (49)
+		send '4' bits: 0100 (50)
+		send '6' bits: 0110 (51)
+		send '7' bits: 0111 (52)
+
+
+		BYTE SENDEN: 'g' 01100111
+		send '5' bits: 0101 (53)
+		send '6' bits: 0110 (54)
+		send '5' bits: 0101 (55)
+		send '7' bits: 0111 (56)
+
+
+		BYTE SENDEN: '' 00010001
+		send '4' bits: 0100 (57)
+		send '5' bits: 0101 (58)
+		send '4' bits: 0100 (59)
+		send '5' bits: 0101 (60)
+
+
+		BYTE SENDEN: '¼' 10111100
+		send '6' bits: 0110 (61)
+		send '7' bits: 0111 (62)
+		send '7' bits: 0111 (63)
+		send '4' bits: 0100 (64)
+
+
+ ------ 
+	JETZT PS 0010
+		PrÃ¼fsumme: 67 - 01000011
+		PS send '5' bits: 0101
+		PS send '4' bits: 0100
+		PS send '4' bits: 0100
+		PS send '7' bits: 0111
+	ENDE PS 0011
+
+
+Chunk:
+'2D E5 9D 1F F3 6A E5 58 8D F1 7D C8 50 1B 78 F4 '
+	START BLOCK 0001
+		BYTE SENDEN: '-' 00101101
+		send '4' bits: 0100 (1)
+		send '6' bits: 0110 (2)
+		send '7' bits: 0111 (3)
+		send '5' bits: 0101 (4)
+
+
+		BYTE SENDEN: 'å' 11100101
+		send '7' bits: 0111 (5)
+		send '6' bits: 0110 (6)
+		send '5' bits: 0101 (7)
+		send '5' bits: 0101 (8)
+
+
+		BYTE SENDEN: '' 10011101
+		send '6' bits: 0110 (9)
+		send '5' bits: 0101 (10)
+		send '7' bits: 0111 (11)
+		send '5' bits: 0101 (12)
+
+
+		BYTE SENDEN: '' 00011111
+		send '4' bits: 0100 (13)
+		send '5' bits: 0101 (14)
+		send '7' bits: 0111 (15)
+		send '7' bits: 0111 (16)
+
+
+		BYTE SENDEN: 'ó' 11110011
+		send '7' bits: 0111 (17)
+		send '7' bits: 0111 (18)
+		send '4' bits: 0100 (19)
+		send '7' bits: 0111 (20)
+
+
+		BYTE SENDEN: 'j' 01101010
+		send '5' bits: 0101 (21)
+		send '6' bits: 0110 (22)
+		send '6' bits: 0110 (23)
+		send '6' bits: 0110 (24)
+
+
+		BYTE SENDEN: 'å' 11100101
+		send '7' bits: 0111 (25)
+		send '6' bits: 0110 (26)
+		send '5' bits: 0101 (27)
+		send '5' bits: 0101 (28)
+
+
+		BYTE SENDEN: 'X' 01011000
+		send '5' bits: 0101 (29)
+		send '5' bits: 0101 (30)
+		send '6' bits: 0110 (31)
+		send '4' bits: 0100 (32)
+
+
+		BYTE SENDEN: '' 10001101
+		send '6' bits: 0110 (33)
+		send '4' bits: 0100 (34)
+		send '7' bits: 0111 (35)
+		send '5' bits: 0101 (36)
+
+
+		BYTE SENDEN: 'ñ' 11110001
+		send '7' bits: 0111 (37)
+		send '7' bits: 0111 (38)
+		send '4' bits: 0100 (39)
+		send '5' bits: 0101 (40)
+
+
+		BYTE SENDEN: '}' 01111101
+		send '5' bits: 0101 (41)
+		send '7' bits: 0111 (42)
+		send '7' bits: 0111 (43)
+		send '5' bits: 0101 (44)
+
+
+		BYTE SENDEN: 'È' 11001000
+		send '7' bits: 0111 (45)
+		send '4' bits: 0100 (46)
+		send '6' bits: 0110 (47)
+		send '4' bits: 0100 (48)
+
+
+		BYTE SENDEN: 'P' 01010000
+		send '5' bits: 0101 (49)
+		send '5' bits: 0101 (50)
+		send '4' bits: 0100 (51)
+		send '4' bits: 0100 (52)
+
+
+		BYTE SENDEN: '' 00011011
+		send '4' bits: 0100 (53)
+		send '5' bits: 0101 (54)
+		send '6' bits: 0110 (55)
+		send '7' bits: 0111 (56)
+
+
+		BYTE SENDEN: 'x' 01111000
+		send '5' bits: 0101 (57)
+		send '7' bits: 0111 (58)
+		send '6' bits: 0110 (59)
+		send '4' bits: 0100 (60)
+
+
+		BYTE SENDEN: 'ô' 11110100
+		send '7' bits: 0111 (61)
+		send '7' bits: 0111 (62)
+		send '5' bits: 0101 (63)
+		send '4' bits: 0100 (64)
+
+
+ ------ 
+	JETZT PS 0010
+		PrÃ¼fsumme: 70 - 01000110
+		PS send '5' bits: 0101
+		PS send '4' bits: 0100
+		PS send '5' bits: 0101
+		PS send '6' bits: 0110
+	ENDE PS 0011
+
+
+Chunk:
+'97 A0 8D 3B 06 25 01 76 40 1F 39 29 79 D9 1B AD '
+	START BLOCK 0001
+		BYTE SENDEN: '—' 10010111
+		send '6' bits: 0110 (1)
+		send '5' bits: 0101 (2)
+		send '5' bits: 0101 (3)
+		send '7' bits: 0111 (4)
+
+
+		BYTE SENDEN: ' ' 10100000
+		send '6' bits: 0110 (5)
+		send '6' bits: 0110 (6)
+		send '4' bits: 0100 (7)
+		send '4' bits: 0100 (8)
+
+
+		BYTE SENDEN: '' 10001101
+		send '6' bits: 0110 (9)
+		send '4' bits: 0100 (10)
+		send '7' bits: 0111 (11)
+		send '5' bits: 0101 (12)
+
+
+		BYTE SENDEN: ';' 00111011
+		send '4' bits: 0100 (13)
+		send '7' bits: 0111 (14)
+		send '6' bits: 0110 (15)
+		send '7' bits: 0111 (16)
+
+
+		BYTE SENDEN: '' 00000110
+		send '4' bits: 0100 (17)
+		send '4' bits: 0100 (18)
+		send '5' bits: 0101 (19)
+		send '6' bits: 0110 (20)
+
+
+		BYTE SENDEN: '%' 00100101
+		send '4' bits: 0100 (21)
+		send '6' bits: 0110 (22)
+		send '5' bits: 0101 (23)
+		send '5' bits: 0101 (24)
+
+
+		BYTE SENDEN: '' 00000001
+		send '4' bits: 0100 (25)
+		send '4' bits: 0100 (26)
+		send '4' bits: 0100 (27)
+		send '5' bits: 0101 (28)
+
+
+		BYTE SENDEN: 'v' 01110110
+		send '5' bits: 0101 (29)
+		send '7' bits: 0111 (30)
+		send '5' bits: 0101 (31)
+		send '6' bits: 0110 (32)
+
+
+		BYTE SENDEN: '@' 01000000
+		send '5' bits: 0101 (33)
+		send '4' bits: 0100 (34)
+		send '4' bits: 0100 (35)
+		send '4' bits: 0100 (36)
+
+
+		BYTE SENDEN: '' 00011111
+		send '4' bits: 0100 (37)
+		send '5' bits: 0101 (38)
+		send '7' bits: 0111 (39)
+		send '7' bits: 0111 (40)
+
+
+		BYTE SENDEN: '9' 00111001
+		send '4' bits: 0100 (41)
+		send '7' bits: 0111 (42)
+		send '6' bits: 0110 (43)
+		send '5' bits: 0101 (44)
+
+
+		BYTE SENDEN: ')' 00101001
+		send '4' bits: 0100 (45)
+		send '6' bits: 0110 (46)
+		send '6' bits: 0110 (47)
+		send '5' bits: 0101 (48)
+
+
+		BYTE SENDEN: 'y' 01111001
+		send '5' bits: 0101 (49)
+		send '7' bits: 0111 (50)
+		send '6' bits: 0110 (51)
+		send '5' bits: 0101 (52)
+
+
+		BYTE SENDEN: 'Ù' 11011001
+		send '7' bits: 0111 (53)
+		send '5' bits: 0101 (54)
+		send '6' bits: 0110 (55)
+		send '5' bits: 0101 (56)
+
+
+		BYTE SENDEN: '' 00011011
+		send '4' bits: 0100 (57)
+		send '5' bits: 0101 (58)
+		send '6' bits: 0110 (59)
+		send '7' bits: 0111 (60)
+
+
+		BYTE SENDEN: '­' 10101101
+		send '6' bits: 0110 (61)
+		send '6' bits: 0110 (62)
+		send '7' bits: 0111 (63)
+		send '5' bits: 0101 (64)
+
+
+ ------ 
+	JETZT PS 0010
+		PrÃ¼fsumme: 59 - 00111011
+		PS send '4' bits: 0100
+		PS send '7' bits: 0111
+		PS send '6' bits: 0110
+		PS send '7' bits: 0111
+	ENDE PS 0011
+
+
+Chunk:
+'FF D6 C5 13 B5 E2 AD 12 88 1E 57 BA 3B B2 8F FD '
+	START BLOCK 0001
+		BYTE SENDEN: 'ÿ' 11111111
+		send '7' bits: 0111 (1)
+		send '7' bits: 0111 (2)
+		send '7' bits: 0111 (3)
+		send '7' bits: 0111 (4)
+
+
+		BYTE SENDEN: 'Ö' 11010110
+		send '7' bits: 0111 (5)
+		send '5' bits: 0101 (6)
+		send '5' bits: 0101 (7)
+		send '6' bits: 0110 (8)
+
+
+		BYTE SENDEN: 'Å' 11000101
+		send '7' bits: 0111 (9)
+		send '4' bits: 0100 (10)
+		send '5' bits: 0101 (11)
+		send '5' bits: 0101 (12)
+
+
+		BYTE SENDEN: '' 00010011
+		send '4' bits: 0100 (13)
+		send '5' bits: 0101 (14)
+		send '4' bits: 0100 (15)
+		send '7' bits: 0111 (16)
+
+
+		BYTE SENDEN: 'µ' 10110101
+		send '6' bits: 0110 (17)
+		send '7' bits: 0111 (18)
+		send '5' bits: 0101 (19)
+		send '5' bits: 0101 (20)
+
+
+		BYTE SENDEN: 'â' 11100010
+		send '7' bits: 0111 (21)
+		send '6' bits: 0110 (22)
+		send '4' bits: 0100 (23)
+		send '6' bits: 0110 (24)
+
+
+		BYTE SENDEN: '­' 10101101
+		send '6' bits: 0110 (25)
+		send '6' bits: 0110 (26)
+		send '7' bits: 0111 (27)
+		send '5' bits: 0101 (28)
+
+
+		BYTE SENDEN: '' 00010010
+		send '4' bits: 0100 (29)
+		send '5' bits: 0101 (30)
+		send '4' bits: 0100 (31)
+		send '6' bits: 0110 (32)
+
+
+		BYTE SENDEN: 'ˆ' 10001000
+		send '6' bits: 0110 (33)
+		send '4' bits: 0100 (34)
+		send '6' bits: 0110 (35)
+		send '4' bits: 0100 (36)
+
+
+		BYTE SENDEN: '' 00011110
+		send '4' bits: 0100 (37)
+		send '5' bits: 0101 (38)
+		send '7' bits: 0111 (39)
+		send '6' bits: 0110 (40)
+
+
+		BYTE SENDEN: 'W' 01010111
+		send '5' bits: 0101 (41)
+		send '5' bits: 0101 (42)
+		send '5' bits: 0101 (43)
+		send '7' bits: 0111 (44)
+
+
+		BYTE SENDEN: 'º' 10111010
+		send '6' bits: 0110 (45)
+		send '7' bits: 0111 (46)
+		send '6' bits: 0110 (47)
+		send '6' bits: 0110 (48)
+
+
+		BYTE SENDEN: ';' 00111011
+		send '4' bits: 0100 (49)
+		send '7' bits: 0111 (50)
+		send '6' bits: 0110 (51)
+		send '7' bits: 0111 (52)
+
+
+		BYTE SENDEN: '²' 10110010
+		send '6' bits: 0110 (53)
+		send '7' bits: 0111 (54)
+		send '4' bits: 0100 (55)
+		send '6' bits: 0110 (56)
+
+
+		BYTE SENDEN: '' 10001111
+		send '6' bits: 0110 (57)
+		send '4' bits: 0100 (58)
+		send '7' bits: 0111 (59)
+		send '7' bits: 0111 (60)
+
+
+		BYTE SENDEN: 'ı' 11111101
+		send '7' bits: 0111 (61)
+		send '7' bits: 0111 (62)
+		send '7' bits: 0111 (63)
+		send '5' bits: 0101 (64)
+
+
+ ------ 
+	JETZT PS 0010
+		PrÃ¼fsumme: 73 - 01001001
+		PS send '5' bits: 0101
+		PS send '4' bits: 0100
+		PS send '6' bits: 0110
+		PS send '5' bits: 0101
+	ENDE PS 0011
+	LETZTER BLOCK 0001
+
+
+Chunk:
+'8B 5E 5A 74 '
+	START BLOCK 0001
+		BYTE SENDEN: '‹' 10001011
+		send '6' bits: 0110 (1)
+		send '4' bits: 0100 (2)
+		send '6' bits: 0110 (3)
+		send '7' bits: 0111 (4)
+
+
+		BYTE SENDEN: '^' 01011110
+		send '5' bits: 0101 (5)
+		send '5' bits: 0101 (6)
+		send '7' bits: 0111 (7)
+		send '6' bits: 0110 (8)
+
+
+		BYTE SENDEN: 'Z' 01011010
+		send '5' bits: 0101 (9)
+		send '5' bits: 0101 (10)
+		send '6' bits: 0110 (11)
+		send '6' bits: 0110 (12)
+
+
+		BYTE SENDEN: 't' 01110100
+		send '5' bits: 0101 (13)
+		send '7' bits: 0111 (14)
+		send '5' bits: 0101 (15)
+		send '4' bits: 0100 (16)
+
+
+ ------ 
+	JETZT PS 0010
+		PrÃ¼fsumme: 17 - 00010001
+		PS send '4' bits: 0100
+		PS send '5' bits: 0101
+		PS send '4' bits: 0100
+		PS send '5' bits: 0101
+	ENDE PS 0011
+	0011 gesendet
+	0011 gesendet
+*** ENDE SENDEN *** 

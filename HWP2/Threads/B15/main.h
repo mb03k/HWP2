@@ -6,11 +6,9 @@
 #define HWP2_MAIN_H
 
 
-
 class main {
 
 };
-
 
 
 #endif //HWP2_MAIN_H

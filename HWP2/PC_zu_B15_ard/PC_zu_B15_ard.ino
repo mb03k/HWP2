@@ -25,28 +25,36 @@ int MSB_PIN = 6;
 int LSB_PIN = 5;
 
 unsigned long startTime = 0;
+int received = 0;
+
+bool sendCS = true;
 
 void loop() {
-  int input = digitalRead(CS_PIN);
-  
-    if (input == HIGH) {
-        Serial.write(64);
-    }
-  
+    unsigned long currentTime = millis();
+    int input = digitalRead(CS_PIN);
+    
     if (Serial.available() > 0) {  // Prüfen, ob Daten verfügbar sind
-        int received = Serial.read();  // Ein Byte empfangen
+        received = Serial.read();
         int value = received - '0';  // ASCII-Wert in Integer umwandeln
+        
 
-        // ich prüfe nicht auf doppelt gesendete Zeichen da das alles das B15 Board macht
-        digitalWrite(CLK_PIN, (value >> 2) & 0b1);
-        digitalWrite(MSB_PIN, (value >> 1) & 0b1);  // MSB
-        digitalWrite(LSB_PIN, value & 0b01);  // LSB
-
-        Serial.println(received, BIN);
+        if (alterWert != value) {
+            alterWert = value;
+            
+            // ich prüfe nicht auf doppelt gesendete Zeichen da das alles das B15 Board macht
+            digitalWrite(CLK_PIN, (value & 0b100));
+            digitalWrite(MSB_PIN, (value & 0b010));  // MSB
+            digitalWrite(LSB_PIN, (value & 0b0001));  // LSB
+        }
     }
-
-    int received = Serial.read();
-    if (received == 1) {
-        digitalWrite(CS_PIN, HIGH);
+    
+    if (input == HIGH) {
+      if (sendCS) {
+        Serial.write(64);
+        sendCS = false;
+      }
+    }
+    else {
+        sendCS = true;
     }
 }
